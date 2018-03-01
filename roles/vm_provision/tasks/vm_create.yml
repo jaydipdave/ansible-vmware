@@ -44,7 +44,6 @@
       timezone: "{{ vm_time_zone }}"
       #runonce:
       #- powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
-  delegate_to: localhost
-  #wait_for_ip_address: yes
+    wait_for_ip_address: yes
   register: new_vm
 
