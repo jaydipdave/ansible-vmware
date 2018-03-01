@@ -9,7 +9,6 @@
     cluster: "{{ cluster }}"
     resource_pool: "{{ resource_pool }}"
     name: "{{ vm_name }}"
-    #folder: "{{ vm_folder }}"
     template: "{{ vm_template }}"
     state: poweredon
     hardware:
@@ -19,7 +18,6 @@
       - size_gb: "{{ primary_disk }}"
         type: thin
         datastore: "{{ primary_datastore }}"
-
       - size_gb: "{{ data_disk }}"
         type: thin
         datastore: "{{ data_datastore }}"
@@ -44,6 +42,6 @@
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
       runonce:
-      - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
   register: new_vm
 
