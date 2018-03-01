@@ -42,8 +42,10 @@
       domainadminpassword: "{{ ad_domain_password }}"
       joindomain: "{{ ad_domain }}"
       timezone: "{{ vm_time_zone }}"
+      dns_servers:
+        - "{{ vm_dns_server1 }}"
+        - "{{ vm_dns_server2 }}"
       #runonce:
       #- powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
-    wait_for_ip_address: yes
   register: new_vm
 
