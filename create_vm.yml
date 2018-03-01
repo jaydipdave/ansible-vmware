@@ -1,0 +1,11 @@
+---
+- name: "Provisioning VM"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+   - config/common.yml
+   # - config/redhat.yml
+
+  roles:
+   - role: vm_provision
