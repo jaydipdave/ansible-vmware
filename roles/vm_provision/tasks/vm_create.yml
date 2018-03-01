@@ -9,10 +9,10 @@
     cluster: "{{ cluster }}"
     resource_pool: "{{ resource_pool }}"
     name: "{{ vm_name }}"
-    folder: "{{ vm_folder }}"
+    #folder: "{{ vm_folder }}"
     template: "{{ vm_template }}"
     state: poweredon
-    esxi_hostname: "{{ esxi_host }}"
+    #esxi_hostname: "{{ esxi_host }}"
     hardware:
       num_cpus: "{{ cpu }}"
       memory_mb: "{{ mem_mb }}"
@@ -25,7 +25,7 @@
         type: thin
         datastore: "{{ data_datastore }}"
     networks:
-      - name: VM Network
+      - name: "{{ vm_network_port_group }}"
         ip: "{{ vm_ip }}"
         netmask: "{{ vm_netmask }}"
         gateway: "{{ vm_gateway }}"
@@ -34,10 +34,7 @@
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
     customization:
-      autologon: no
-      dns_servers:
-      - "{{ vm_dns_server1 }}"
-      - "{{ vm_dns_server2 }}"
+      autologon: yes
       domain:  "{{ vm_dns_domain }}"
       password: "{{ vm_new_password }}"
       hostname: "{{ vm_hostname }}"
@@ -48,37 +45,6 @@
       #runonce:
       #- powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
   delegate_to: localhost
-    wait_for_ip_address: yes
+  #wait_for_ip_address: yes
   register: new_vm
 
-  - name: "REBOOT | Reboot to ensure network settings take effect"
-    local_action:
-      module: vmware_vm_shell
-      hostname: "{{ vcenter_host }}"
-      username: "{{ vcenter_username }}"
-      password: "{{ vcenter_password }}"
-      datacenter: "{{ datacenter }}"
-      vm_id: "{{ name }}"
-      vm_username: root
-      vm_password: "{{ rooter }}"
-      vm_shell: /sbin/shutdown
-      vm_shell_args: " -r now" 
-
-  - name: "REBOOT | Wait for server to come back"
-    local_action: 
-      module: wait_for
-      host: "{{ server_ip }}"
-      port: 22
-      state: started
-      delay: 30
-      timeout: 300
-
-- hosts: all
-  gather_facts: true
-  connection: smart
-
-  roles:
-    - role: common
-
-- include: disk_resize.yml
-  when: disk > 17

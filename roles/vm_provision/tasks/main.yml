@@ -1,2 +1,2 @@
 ---
-include_file: "vm_create.yml"
+- include: "vm_create.yml"
