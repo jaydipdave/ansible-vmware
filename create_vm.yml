@@ -4,8 +4,9 @@
   gather_facts: false
   connection: local
   vars_files:
-   - config/common.yml
+    - config/common.yml
    # - config/redhat.yml
 
   roles:
-   - role: vm_provision
+    - role: vm_provision
+    - { role: vm_provision, vm_ip: "10.106.176.46", vm_name: "JAYDEEP008", vm_hostname: vm_name, vm_template: "2012_R2_STD Fusion"  }

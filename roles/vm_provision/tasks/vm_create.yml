@@ -12,7 +12,6 @@
     #folder: "{{ vm_folder }}"
     template: "{{ vm_template }}"
     state: poweredon
-    #esxi_hostname: "{{ esxi_host }}"
     hardware:
       num_cpus: "{{ cpu }}"
       memory_mb: "{{ mem_mb }}"
@@ -37,7 +36,6 @@
       autologon: yes
       domain:  "{{ vm_dns_domain }}"
       password: "{{ vm_new_password }}"
-      hostname: "{{ vm_hostname }}"
       domainadmin: "{{ ad_domain_username }}"
       domainadminpassword: "{{ ad_domain_password }}"
       joindomain: "{{ ad_domain }}"
@@ -45,7 +43,7 @@
       dns_servers:
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
-      #runonce:
-      #- powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+      runonce:
+      - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
   register: new_vm
 
