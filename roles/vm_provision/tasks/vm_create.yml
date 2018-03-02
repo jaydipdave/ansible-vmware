@@ -31,7 +31,7 @@
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
     customization:
-      autologon: yes
+      autologon: true
       domain:  "{{ vm_dns_domain }}"
       password: "{{ vm_new_password }}"
       domainadmin: "{{ ad_domain_username }}"
@@ -42,6 +42,21 @@
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
       runonce:
-        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
-  register: new_vm
+        - powershell.exe -ExecutionPolicy Unrestricted -File C:\temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+        - winrm set winrm/config/service/auth @{Basic="true"}
+        - Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+	- powershell Get-Disk | Where partitionstyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -Confirm:$false
+  register: newvm
+
+- name: Wait for SysPrep to complete
+  wait_for:
+    host: "{{ vm_ip }}"
+    port: 5986
+    delay: 120
+    timeout: 1200
+  when: newvm.changed
+
+- name: sleep for 120 seconds while disk formats and run once scripts execute
+  wait_for: timeout=120
+
 
