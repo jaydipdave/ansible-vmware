@@ -1,0 +1,22 @@
+- hosts: all
+  gather_facts: false
+  vars_files:
+  - config/common.yml
+
+  tasks:
+  - name: Adding to Domain
+    win_domain_membership:
+      dns_domain_name: "{{ ad_domain }}"
+      domain_ou_path: "{{ ad_ou }}"
+      hostname: "JAYDEEP009"
+      domain_admin_user: "{{ ad_domain_username }}"
+      domain_admin_password: "{{ ad_domain_password }}"
+      state: domain
+    register: domain_state
+
+  - name: Adding to Group
+    win_group_membership:
+      name: Administrators
+      members:
+        - "irving\\admins_irvdcwin1830"
+      state: present
