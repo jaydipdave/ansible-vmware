@@ -8,9 +8,10 @@
    # - config/redhat.yml
 
   roles:
-    - role: vm_provision
+    #- role: vm_provision
+    #  os: "linux"
     - role: vm_provision
       vm_ip: "10.106.176.46"
-      vm_name: "JAYDEEP008"
+      vm_name: "JAYDEEP009"
       vm_template: "2012_R2_STD Fusion"
       os: "win"
