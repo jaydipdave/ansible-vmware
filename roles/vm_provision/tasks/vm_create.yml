@@ -48,7 +48,7 @@
         - powershell Get-Disk | Where partitionstyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -Confirm:$false
   register: newvm
 
-- name: Wait for SysPrep to complete
+- name: "PROVISION | Wait for start up tasks to complete"
   wait_for:
     host: "{{ vm_ip }}"
     port: 5986
@@ -56,7 +56,7 @@
     timeout: 1200
   when: newvm.changed and os=="win"
 
-- name: sleep for 120 seconds while disk formats and run once scripts execute
+- name: "PROVISION | Sleep for 120 seconds while disk formats and run once scripts execute"
   wait_for: timeout=120
   when: os=="win"
 
