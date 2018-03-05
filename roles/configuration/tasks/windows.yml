@@ -7,7 +7,6 @@
     domain_admin_user: "{{ ad_domain_username }}"
     domain_admin_password: "{{ ad_domain_password }}"
     state: domain
-  delegate_to: "{{ vm_ip }}"
   register: domain_state
 
 - name: "OS_CONFIG | Adding AD Group"
@@ -16,4 +15,3 @@
     members:
       - "{{ local_admin_groups }}"
     state: present
-  delegate_to: "{{ vm_ip }}"

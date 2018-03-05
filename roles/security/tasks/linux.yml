@@ -1,4 +1,10 @@
 ---
+- name: "OS_HARDENING | Enable necessary repos"
+  yum:
+    name: "*"
+    enablerepo: "*jdi"
+    state: latest
+    
 - name: "OS_HARDENING | Ensure kpatch is present"
   yum:
     name: kpatch
