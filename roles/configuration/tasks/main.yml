@@ -79,12 +79,12 @@
   filesystem:
     dev: "{{ item }}"
     ftype: xfs
+  when: os!="win"
   with_items:
     - /dev/data/current
     - /dev/data/backup
   delegate_to: "{{ vm_ip }}"
-  when: os!="win"
-
+  
 - name: "OS_CONFIG | Mounting FS"
   mount:
     path: "{{ item.path }}"
