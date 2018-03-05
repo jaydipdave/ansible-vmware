@@ -77,7 +77,7 @@
 
 - name: "OS_CONFIG | Crteating xFS"
   filesystem:
-    dev: data
+    dev: "{{ item }}"
     ftype: xfs
   with_items:
     - /dev/data/current
