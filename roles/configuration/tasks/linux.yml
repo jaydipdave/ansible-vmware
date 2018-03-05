@@ -38,20 +38,16 @@
   
 - name: "OS_CONFIG | Crteating xFS"
   filesystem:
-    dev: "{{ item }}"
+    dev: "/dev/data/{{ item.vol }}"
     fstype: xfs
-  with_items:
-    - /dev/data/current
-    - /dev/data/backup
-  
+  with_items: "{{ data_partitions }}"
+    
 - name: "OS_CONFIG | Mounting FS"
   mount:
-    path: "{{ item.path }}"
-    src: "{{ item. src }}"
+    path: "{{ item.mount }}"
+    src: "/dev/data/{{ item.vol }}"
     state: mounted
     fstype: xfs
     passno: 2
-  with_items:
-    - { path: /data, src: /dev/data/current }
-    - { path: /backup, src: /dev/data/backup }
+  with_items:  "{{ data_partitions }}"
   
