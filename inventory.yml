@@ -11,11 +11,6 @@ inventory_something_else:
     os: "linux"
 
 inventory:
-  - vm_ip: "10.106.176.46"
-    vm_name: "JAYDEEP009"
-    vm_template: "2012_R2_STD Fusion"
-    os: "win"
-
   - vm_ip: "10.106.176.45"
     vm_name: "JAYDEEP007"
     vm_template: "Fusion_RHEL7_Template"
