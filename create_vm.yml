@@ -30,7 +30,7 @@
         vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
-        ansible_username: "{{ vm_win_username }}"
+        ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
       with_items:
@@ -63,7 +63,7 @@
     #     vm_template: "{{ inventory_item.vm_template }}"
     #     os: "{{ inventory_item.os }}"
     #     ansible_connection: winrm
-    #     ansible_username: "{{ vm_win_username }}"
+    #     ansible_user: "{{ vm_win_username }}"
     #     ansible_password: "{{ vm_win_password }}"
     #     ansible_winrm_server_cert_validation: ignore
     #   with_items:
