@@ -1,2 +1,2 @@
 ---
-- include: "vm_create.yml"
+- import_tasks: "vm_create.yml"

@@ -1,0 +1,85 @@
+---
+- name: "OS_CONFIG | Configuring AD Group "
+  win_domain_membership:
+    dns_domain_name: "{{ ad_domain }}"
+    domain_ou_path: "{{ ad_ou }}"
+    hostname: {{ vm_name }}
+    domain_admin_user: "{{ ad_domain_username }}"
+    domain_admin_password: "{{ ad_domain_password }}"
+    state: domain
+  deleget_to: "{{ vm_ip }}"
+  when: os=="win"
+  register: domain_state
+
+- name: "OS_CONFIG | Adding AD Group"
+  win_group_membership:
+    name: Administrators
+    members:
+      - "{{ local_admin_groups }}"
+    state: present
+  deleget_to: "{{ vm_ip }}"
+  when: os=="win"
+
+- name: "OS_CONFIG | Add Motd"
+  template:
+    src: motd.j2
+    dest: /etc/motd
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Add Motd"
+  template:
+    src: motd.j2
+    dest: /etc/issue.net
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Preparing The DISK "
+  parted:
+    device: /dev/sdb
+    number: 1
+    flags: [lvm]
+    state: present
+
+- name: "OS_CONFIG | Creating Volume Group"
+  lvg:
+    vg: data
+    pvs: /dev/sdb1
+    pesize: 32
+
+- name: "OS_CONFIG | Creating Volume Group"
+  lvg:
+    vg: data
+    pvs: /dev/sdb1
+    pesize: 32
+
+- name: "OS_CONFIG | Crteating volumes"
+  lvol:
+    vg: data
+    lv: current
+    size: 50%PVS
+
+- name: "OS_CONFIG | Crteating volumes"
+  lvol:
+    vg: data
+    lv: backup
+    size: 100%FREE
+
+- name: "OS_CONFIG | Crteating xFS"
+  filesystem:
+    dev: data
+    ftype: xfs
+  with_items:
+    - /dev/data/current
+    - /dev/data/backup
+
+- name: "OS_CONFIG | Mounting FS"
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item. src }}"
+    state: mounted
+    fstype: xfs
+    passno: 2
+  with_items:
+    - { path: /data, src: /dev/data/current }
+    - { path: /backup, src: /dev/data/backup }

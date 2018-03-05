@@ -1,17 +1,81 @@
 ---
-- name: "Provisioning VM"
+- name: "Creating VMs"
   hosts: localhost
   gather_facts: false
   connection: local
   vars_files:
     - config/common.yml
+    - inventory.yml
    # - config/redhat.yml
+  tasks:
+    - name: "MAIN | Creating Machines"
+      include_role:
+        name: vm_provision
+      vars:
+        vm_ip: "{{ inventory.vm_ip }}"
+        vm_name: "{{ inventory.vm_name }}"
+        vm_template: "{{ inventory.vm_template }}"
+        os: "{{ inventory.os }}"
+      with_items:
+        - "{{ inventory }}"
 
-  roles:
-    #- role: vm_provision
-    #  os: "linux"
-    - role: vm_provision
-      vm_ip: "10.106.176.46"
-      vm_name: "JAYDEEP009"
-      vm_template: "2012_R2_STD Fusion"
-      os: "win"
+    - name: "MAIN | Configuring Windows VMs"
+      include_role:
+        name: configuration
+      vars:
+        vm_ip: "{{ inventory.vm_ip }}"
+        vm_name: "{{ inventory.vm_name }}"
+        vm_template: "{{ inventory.vm_template }}"
+        os: "{{ inventory.os }}"
+        ansible_connection: winrm
+        ansible_username: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+      with_items:
+        - "{{ inventory }}"
+      when: "{{ item.os }}" == "win"
+
+    - name: "MAIN | Configuring Linux VMs"
+      include_role:
+        name: configuration
+      vars:
+        vm_ip: "{{ inventory.vm_ip }}"
+        vm_name: "{{ inventory.vm_name }}"
+        vm_template: "{{ inventory.vm_template }}"
+        os: "{{ inventory.os }}"
+        ansible_connection: smart
+      with_items:
+        - "{{ inventory }}"
+      when: "{{ item.os }}" != "win"
+    
+    # - name: "MAIN | Securing Windows VMs"
+    #   include_role:
+    #     name: configuration
+    #   vars:
+    #     vm_ip: "{{ inventory.vm_ip }}"
+    #     vm_name: "{{ inventory.vm_name }}"
+    #     vm_template: "{{ inventory.vm_template }}"
+    #     os: "{{ inventory.os }}"
+    #     ansible_connection: winrm
+    #     ansible_username: "{{ vm_win_username }}"
+    #     ansible_password: "{{ vm_win_password }}"
+    #     ansible_winrm_server_cert_validation: ignore
+    #   with_items:
+    #     - "{{ inventory }}"
+    #   when: "{{ item.os }}" == "win"
+
+    # - name: "MAIN | Securing Linux VMs"
+    #   include_role:
+    #     name: configuration
+    #   vars:
+    #     vm_ip: "{{ inventory.vm_ip }}"
+    #     vm_name: "{{ inventory.vm_name }}"
+    #     vm_template: "{{ inventory.vm_template }}"
+    #     os: "{{ inventory.os }}"
+    #     ansible_connection: smart
+    #   with_items:
+    #     - "{{ inventory }}"
+    #   when: "{{ item.os }}" != "win"
+
+
+

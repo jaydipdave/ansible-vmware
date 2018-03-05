@@ -46,6 +46,8 @@
         - winrm set winrm/config/service/auth @{Basic="true"}
         - Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
         - powershell Get-Disk | Where partitionstyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -Confirm:$false
+        - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticecaption -Value "{{ legal_notice_title }}"
+        - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticetext -Value "{{ legal_notice_text }}"
   register: newvm
 
 - name: "PROVISION | Wait for start up tasks to complete"
