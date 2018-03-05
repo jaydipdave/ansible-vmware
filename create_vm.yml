@@ -6,20 +6,20 @@
   vars_files:
     - config/common.yml
     - inventory.yml
-   # - config/redhat.yml
+    
   tasks:
-    # - name: "MAIN | Creating Machines"
-    #   include_role:
-    #     name: vm_provision
-    #   vars:
-    #     vm_ip: "{{ inventory_item.vm_ip }}"
-    #     vm_name: "{{ inventory_item.vm_name }}"
-    #     vm_template: "{{ inventory_item.vm_template }}"
-    #     os: "{{ inventory_item.os }}"
-    #   with_items:
-    #     - "{{ inventory }}"
-    #   loop_control:
-    #     loop_var: inventory_item
+    - name: "MAIN | Creating Machines"
+      include_role:
+        name: vm_provision
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
 
     - name: "MAIN | Configuring Windows VMs"
       include_role:

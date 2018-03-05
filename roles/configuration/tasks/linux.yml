@@ -1,0 +1,78 @@
+---
+- name: "OS_CONFIG | Add Motd"
+  template:
+    src: motd.j2
+    dest: /etc/motd
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Add Motd"
+  template:
+    src: motd.j2
+    dest: /etc/issue.net
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Preparing The DISK "
+  parted:
+    device: /dev/sdb
+    number: 1
+    flags: [lvm]
+    state: present
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Creating Volume Group"
+  lvg:
+    vg: data
+    pvs: /dev/sdb1
+    pesize: 32
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Creating Volume Group"
+  lvg:
+    vg: data
+    pvs: /dev/sdb1
+    pesize: 32
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Crteating volumes"
+  lvol:
+    vg: data
+    lv: current
+    size: 50%PVS
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Crteating volumes"
+  lvol:
+    vg: data
+    lv: backup
+    size: 100%FREE
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
+
+- name: "OS_CONFIG | Crteating xFS"
+  filesystem:
+    dev: "{{ item }}"
+    ftype: xfs
+  when: os!="win"
+  with_items:
+    - /dev/data/current
+    - /dev/data/backup
+  delegate_to: "{{ vm_ip }}"
+
+- name: "OS_CONFIG | Mounting FS"
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item. src }}"
+    state: mounted
+    fstype: xfs
+    passno: 2
+  with_items:
+    - { path: /data, src: /dev/data/current }
+    - { path: /backup, src: /dev/data/backup }
+  delegate_to: "{{ vm_ip }}"
+  when: os!="win"
