@@ -57,7 +57,7 @@
 - name: "OS_CONFIG | Crteating xFS"
   filesystem:
     dev: "{{ item }}"
-    ftype: xfs
+    fstype: xfs
   when: os!="win"
   with_items:
     - /dev/data/current

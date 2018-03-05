@@ -1,4 +1,25 @@
 ---
+- name: "PROVISION | Check if IP in use"
+  wait_for:
+    host: "{{ vm_ip }}"
+    port: 5986
+    delay: 10
+    timeout: 20
+  ignore_errors: true
+  register: ip_exists_win
+
+- name: "PROVISION | Check if IP in use"
+  wait_for:
+    host: "{{ vm_ip }}"
+    port: 22
+    delay: 10
+    timeout: 20
+  ignore_errors: true
+  register: ip_exists_linux
+
+- debug:
+    var: ip_exists_linux
+
 - name: "PROVISION | Create VM from template"
   vmware_guest:      
     validate_certs: false
@@ -60,6 +81,5 @@
 
 - name: "PROVISION | Sleep for 120 seconds while disk formats and run once scripts execute"
   wait_for: timeout=120
-  when: os=="win"
 
 
