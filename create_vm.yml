@@ -8,16 +8,16 @@
     - inventory.yml
    # - config/redhat.yml
   tasks:
-    - name: "MAIN | Creating Machines"
-      include_role:
-        name: vm_provision
-      vars:
-        vm_ip: "{{ item.vm_ip }}"
-        vm_name: "{{ item.vm_name }}"
-        vm_template: "{{ item.vm_template }}"
-        os: "{{ item.os }}"
-      with_items:
-        - "{{ inventory }}"
+    # - name: "MAIN | Creating Machines"
+    #   include_role:
+    #     name: vm_provision
+    #   vars:
+    #     vm_ip: "{{ item.vm_ip }}"
+    #     vm_name: "{{ item.vm_name }}"
+    #     vm_template: "{{ item.vm_template }}"
+    #     os: "{{ item.os }}"
+    #   with_items:
+    #     - "{{ inventory }}"
 
     - name: "MAIN | Configuring Windows VMs"
       include_role:
@@ -33,7 +33,7 @@
         ansible_winrm_server_cert_validation: ignore
       with_items:
         - "{{ inventory }}"
-      when: "{{ item.os }}" == "win"
+      when: item.os == "win"
 
     - name: "MAIN | Configuring Linux VMs"
       include_role:
@@ -46,7 +46,7 @@
         ansible_connection: smart
       with_items:
         - "{{ inventory }}"
-      when: "{{ item.os }}" != "win"
+      when: item.os != "win"
     
     # - name: "MAIN | Securing Windows VMs"
     #   include_role:
