@@ -7,5 +7,5 @@ inventory:
 
   - vm_ip: "10.106.176.45"
     vm_name: "JAYDEEP007"
-    vm_template: "2012_R2_STD Fusion"
+    vm_template: "Fusion_RHEL7_Template"
     os: "linux"
