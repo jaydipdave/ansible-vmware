@@ -7,7 +7,7 @@
     domain_admin_user: "{{ ad_domain_username }}"
     domain_admin_password: "{{ ad_domain_password }}"
     state: domain
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os=="win"
   register: domain_state
 
@@ -17,21 +17,21 @@
     members:
       - "{{ local_admin_groups }}"
     state: present
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os=="win"
 
 - name: "OS_CONFIG | Add Motd"
   template:
     src: motd.j2
     dest: /etc/motd
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Add Motd"
   template:
     src: motd.j2
     dest: /etc/issue.net
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Preparing The DISK "
@@ -40,7 +40,7 @@
     number: 1
     flags: [lvm]
     state: present
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Creating Volume Group"
@@ -48,7 +48,7 @@
     vg: data
     pvs: /dev/sdb1
     pesize: 32
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Creating Volume Group"
@@ -56,7 +56,7 @@
     vg: data
     pvs: /dev/sdb1
     pesize: 32
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Crteating volumes"
@@ -64,7 +64,7 @@
     vg: data
     lv: current
     size: 50%PVS
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Crteating volumes"
@@ -72,7 +72,7 @@
     vg: data
     lv: backup
     size: 100%FREE
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Crteating xFS"
@@ -82,7 +82,7 @@
   with_items:
     - /dev/data/current
     - /dev/data/backup
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
 - name: "OS_CONFIG | Mounting FS"
@@ -95,5 +95,5 @@
   with_items:
     - { path: /data, src: /dev/data/current }
     - { path: /backup, src: /dev/data/backup }
-  deleget_to: "{{ vm_ip }}"
+  delegate_to: "{{ vm_ip }}"
   when: os!="win"
