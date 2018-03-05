@@ -31,15 +31,9 @@
 - name: "OS_CONFIG | Crteating volumes"
   lvol:
     vg: data
-    lv: current
-    size: 50%PVS
-  ignore_errors: true
-  
-- name: "OS_CONFIG | Crteating volumes"
-  lvol:
-    vg: data
-    lv: backup
-    size: 100%FREE
+    lv: "{{ item.vol }}"
+    size: "{{ item.size }}"
+  with_items: "{{ data_partitions }}"
   ignore_errors: true
   
 - name: "OS_CONFIG | Crteating xFS"

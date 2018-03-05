@@ -4,7 +4,7 @@
     host: "{{ vm_ip }}"
     port: 5986
     delay: 10
-    timeout: 20
+    timeout: 10
   ignore_errors: true
   register: ip_exists_win
 
@@ -13,7 +13,7 @@
     host: "{{ vm_ip }}"
     port: 22
     delay: 10
-    timeout: 20
+    timeout: 10
   ignore_errors: true
   register: ip_exists_linux
 
@@ -70,6 +70,7 @@
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticecaption -Value "{{ legal_notice_title }}"
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticetext -Value "{{ legal_notice_text }}"
   register: newvm
+  when: ip_exists_linux.msg.find("Timeout") != -1 and ip_exists_win.msg.find("Timeout") != -1 
 
 - name: "PROVISION | Wait for start up tasks to complete"
   wait_for:
