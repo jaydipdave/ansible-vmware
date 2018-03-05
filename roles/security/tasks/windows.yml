@@ -2,13 +2,13 @@
 - name: OS_HARDENING | Install all security/critical updates
   win_updates:
     category: SecurityUpdates
-  ignore_erros: true
+  ignore_errors: true
   tags:
     - updates
 
 - name: OS_HARDENING | Configure Windows Audit policies
   win_command: AuditPol /Set /Category:"{{ item }}" /Failure:Enable /Success:Enable
-  ignore_erros: true
+  ignore_errors: true
   with_items: 
     - Account Logon
     - Object Access
