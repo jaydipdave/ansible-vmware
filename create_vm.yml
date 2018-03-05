@@ -56,7 +56,7 @@
     
     - name: "MAIN | Securing Windows VMs"
       include_role:
-        name: configuration
+        name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
         vm_name: "{{ inventory_item.vm_name }}"
@@ -74,7 +74,7 @@
 
     - name: "MAIN | Securing Linux VMs"
       include_role:
-        name: configuration
+        name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
         vm_name: "{{ inventory_item.vm_name }}"
