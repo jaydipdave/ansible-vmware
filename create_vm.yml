@@ -70,7 +70,7 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
-      when: "{{ inventory_item.os }}" == "win"
+      when: inventory_item.os == "win"
 
     - name: "MAIN | Securing Linux VMs"
       include_role:
@@ -85,7 +85,7 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
-      when: "{{ inventory_item.os }}" != "win"
+      when: inventory_item.os != "win"
 
 
 
