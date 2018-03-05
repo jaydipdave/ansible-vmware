@@ -16,6 +16,8 @@
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -33,6 +35,8 @@
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -48,6 +52,8 @@
         vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -66,6 +72,8 @@
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -81,6 +89,8 @@
         vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
