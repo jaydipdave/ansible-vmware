@@ -17,9 +17,6 @@
   ignore_errors: true
   register: ip_exists_linux
 
-- debug:
-    var: [ ip_exists_linux, ip_exists_win ]
-
 - name: "PROVISION | Create VM from template"
   vmware_guest:      
     validate_certs: false
@@ -70,7 +67,7 @@
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticecaption -Value "{{ legal_notice_title }}"
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticetext -Value "{{ legal_notice_text }}"
   register: newvm
-  when: ip_exists_linux.msg.find('Timeout') != -1 and ip_exists_win.msg.find('Timeout') != -1 
+  when: ip_exists_linux.msg | search('Timeout') and ip_exists_win.msg | search("Timeout") 
 
 - name: "PROVISION | Wait for start up tasks to complete"
   wait_for:
