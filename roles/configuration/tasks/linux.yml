@@ -43,6 +43,7 @@
     vg: data
     lv: current
     size: 50%PVS
+  ignore_errors: true
   delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
@@ -51,6 +52,7 @@
     vg: data
     lv: backup
     size: 100%FREE
+  ignore_errors: true
   delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
