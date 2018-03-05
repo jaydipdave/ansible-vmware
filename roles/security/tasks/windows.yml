@@ -1,0 +1,33 @@
+---
+- name: OS_HARDENING | Install all security/critical updates
+  win_updates:
+    category: SecurityUpdates
+    logPath: "c:\\temp\\ansible-updates.log"
+  tags:
+    - updates
+
+- name: OS_HARDENING | Configure Windows Audit policies
+  win_command: AuditPol /Set /Category:"{{ item }}" /Failure:Enable /Success:Enable
+  with_items: 
+    - Account Logon
+    - Object Access
+    - Privilege Use
+    - Detailed Tracking
+    - Policy Change
+    - DS Access
+
+- name: OS_HARDENING | Configure Windows Audit policies
+  win_command: AuditPol /Set /Category:"{{ item }}" /Failure:Enable /Success:Enable
+  with_items:
+    - Application Group Management
+    - Computer Account Management
+    - Distribution Group Management
+  ignore_errors: true
+
+- name: OS_HARDENING | Configure Windows Audit policies
+  win_command: AuditPol /Set /Category:"{{ item }}" /Success:Enable
+  with_items:
+    - User Account Management
+    - Security Group Management
+    - Directory Service Changes
+  ignore_errors: true
