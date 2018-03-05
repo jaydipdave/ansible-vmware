@@ -75,29 +75,29 @@
   delegate_to: "{{ vm_ip }}"
   when: os!="win"
 
-# - name: "OS_CONFIG | Crteating xFS"
-#   filesystem:
-#     dev: "{{ item }}"
-#     ftype: xfs
-#   when: os!="win"
-#   with_items:
-#     - /dev/data/current
-#     - /dev/data/backup
-#   delegate_to: "{{ vm_ip }}"
-
 - name: "OS_CONFIG | Crteating xFS"
   filesystem:
-    dev: /dev/data/current
+    dev: "{{ item }}"
     ftype: xfs
   when: os!="win"
+  with_items:
+    - /dev/data/current
+    - /dev/data/backup
   delegate_to: "{{ vm_ip }}"
 
-- name: "OS_CONFIG | Creating xFS"
-  filesystem:
-    dev: /dev/data/backup
-    ftype: xfs
-  when: os!="win"
-  delegate_to: "{{ vm_ip }}"
+# - name: "OS_CONFIG | Crteating xFS"
+#   filesystem:
+#     dev: /dev/data/current
+#     ftype: xfs
+#   when: os!="win"
+#   delegate_to: "{{ vm_ip }}"
+
+# - name: "OS_CONFIG | Creating xFS"
+#   filesystem:
+#     dev: /dev/data/backup
+#     ftype: xfs
+#   when: os!="win"
+#   delegate_to: "{{ vm_ip }}"
   
 - name: "OS_CONFIG | Mounting FS"
   mount:

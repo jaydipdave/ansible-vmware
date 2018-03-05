@@ -12,70 +12,80 @@
     #   include_role:
     #     name: vm_provision
     #   vars:
-    #     vm_ip: "{{ item.vm_ip }}"
-    #     vm_name: "{{ item.vm_name }}"
-    #     vm_template: "{{ item.vm_template }}"
-    #     os: "{{ item.os }}"
+    #     vm_ip: "{{ inventory_item.vm_ip }}"
+    #     vm_name: "{{ inventory_item.vm_name }}"
+    #     vm_template: "{{ inventory_item.vm_template }}"
+    #     os: "{{ inventory_item.os }}"
     #   with_items:
     #     - "{{ inventory }}"
+    #   loop_control:
+    #     loop_var: inventory_item
 
     - name: "MAIN | Configuring Windows VMs"
       include_role:
         name: configuration
       vars:
-        vm_ip: "{{ item.vm_ip }}"
-        vm_name: "{{ item.vm_name }}"
-        vm_template: "{{ item.vm_template }}"
-        os: "{{ item.os }}"
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_username: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
       with_items:
         - "{{ inventory }}"
-      when: item.os == "win"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"
 
     - name: "MAIN | Configuring Linux VMs"
       include_role:
         name: configuration
       vars:
-        vm_ip: "{{ item.vm_ip }}"
-        vm_name: "{{ item.vm_name }}"
-        vm_template: "{{ item.vm_template }}"
-        os: "{{ item.os }}"
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
         ansible_connection: smart
       with_items:
         - "{{ inventory }}"
-      when: item.os != "win"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os != "win"
     
     # - name: "MAIN | Securing Windows VMs"
     #   include_role:
     #     name: configuration
     #   vars:
-    #     vm_ip: "{{ item.vm_ip }}"
-    #     vm_name: "{{ item.vm_name }}"
-    #     vm_template: "{{ item.vm_template }}"
-    #     os: "{{ item.os }}"
+    #     vm_ip: "{{ inventory_item.vm_ip }}"
+    #     vm_name: "{{ inventory_item.vm_name }}"
+    #     vm_template: "{{ inventory_item.vm_template }}"
+    #     os: "{{ inventory_item.os }}"
     #     ansible_connection: winrm
     #     ansible_username: "{{ vm_win_username }}"
     #     ansible_password: "{{ vm_win_password }}"
     #     ansible_winrm_server_cert_validation: ignore
     #   with_items:
     #     - "{{ inventory }}"
-    #   when: "{{ item.os }}" == "win"
+    #   loop_control:
+    #     loop_var: inventory_item
+    #   when: "{{ inventory_item.os }}" == "win"
 
     # - name: "MAIN | Securing Linux VMs"
     #   include_role:
     #     name: configuration
     #   vars:
-    #     vm_ip: "{{ item.vm_ip }}"
-    #     vm_name: "{{ item.vm_name }}"
-    #     vm_template: "{{ item.vm_template }}"
-    #     os: "{{ item.os }}"
+    #     vm_ip: "{{ inventory_item.vm_ip }}"
+    #     vm_name: "{{ inventory_item.vm_name }}"
+    #     vm_template: "{{ inventory_item.vm_template }}"
+    #     os: "{{ inventory_item.os }}"
     #     ansible_connection: smart
     #   with_items:
     #     - "{{ inventory }}"
-    #   when: "{{ item.os }}" != "win"
+    #   loop_control:
+    #     loop_var: inventory_item
+    #   when: "{{ inventory_item.os }}" != "win"
 
 
 
