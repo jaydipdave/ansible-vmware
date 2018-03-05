@@ -2,7 +2,6 @@
 - name: OS_HARDENING | Install all security/critical updates
   win_updates:
     category: SecurityUpdates
-    logPath: "c:\\temp\\ansible-updates.log"
   tags:
     - updates
 

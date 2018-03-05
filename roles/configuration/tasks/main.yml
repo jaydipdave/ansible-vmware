@@ -1,8 +1,8 @@
 ---
-- import_tasks: windows.yml
+- include_tasks: windows.yml
   delegate_to: "{{ vm_ip }}"
   when: os=="win"
 
-- import_tasks: linux.yml
+- include_tasks: linux.yml
   delegate_to: "{{ vm_ip }}"
   when: os!="win"
