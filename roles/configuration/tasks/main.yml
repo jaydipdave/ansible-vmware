@@ -40,30 +40,40 @@
     number: 1
     flags: [lvm]
     state: present
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Creating Volume Group"
   lvg:
     vg: data
     pvs: /dev/sdb1
     pesize: 32
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Creating Volume Group"
   lvg:
     vg: data
     pvs: /dev/sdb1
     pesize: 32
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Crteating volumes"
   lvol:
     vg: data
     lv: current
     size: 50%PVS
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Crteating volumes"
   lvol:
     vg: data
     lv: backup
     size: 100%FREE
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Crteating xFS"
   filesystem:
@@ -72,6 +82,8 @@
   with_items:
     - /dev/data/current
     - /dev/data/backup
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"
 
 - name: "OS_CONFIG | Mounting FS"
   mount:
@@ -83,3 +95,5 @@
   with_items:
     - { path: /data, src: /dev/data/current }
     - { path: /backup, src: /dev/data/backup }
+  deleget_to: "{{ vm_ip }}"
+  when: os!="win"

@@ -12,10 +12,10 @@
       include_role:
         name: vm_provision
       vars:
-        vm_ip: "{{ inventory.vm_ip }}"
-        vm_name: "{{ inventory.vm_name }}"
-        vm_template: "{{ inventory.vm_template }}"
-        os: "{{ inventory.os }}"
+        vm_ip: "{{ item.vm_ip }}"
+        vm_name: "{{ item.vm_name }}"
+        vm_template: "{{ item.vm_template }}"
+        os: "{{ item.os }}"
       with_items:
         - "{{ inventory }}"
 
@@ -23,10 +23,10 @@
       include_role:
         name: configuration
       vars:
-        vm_ip: "{{ inventory.vm_ip }}"
-        vm_name: "{{ inventory.vm_name }}"
-        vm_template: "{{ inventory.vm_template }}"
-        os: "{{ inventory.os }}"
+        vm_ip: "{{ item.vm_ip }}"
+        vm_name: "{{ item.vm_name }}"
+        vm_template: "{{ item.vm_template }}"
+        os: "{{ item.os }}"
         ansible_connection: winrm
         ansible_username: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
@@ -39,10 +39,10 @@
       include_role:
         name: configuration
       vars:
-        vm_ip: "{{ inventory.vm_ip }}"
-        vm_name: "{{ inventory.vm_name }}"
-        vm_template: "{{ inventory.vm_template }}"
-        os: "{{ inventory.os }}"
+        vm_ip: "{{ item.vm_ip }}"
+        vm_name: "{{ item.vm_name }}"
+        vm_template: "{{ item.vm_template }}"
+        os: "{{ item.os }}"
         ansible_connection: smart
       with_items:
         - "{{ inventory }}"
@@ -52,10 +52,10 @@
     #   include_role:
     #     name: configuration
     #   vars:
-    #     vm_ip: "{{ inventory.vm_ip }}"
-    #     vm_name: "{{ inventory.vm_name }}"
-    #     vm_template: "{{ inventory.vm_template }}"
-    #     os: "{{ inventory.os }}"
+    #     vm_ip: "{{ item.vm_ip }}"
+    #     vm_name: "{{ item.vm_name }}"
+    #     vm_template: "{{ item.vm_template }}"
+    #     os: "{{ item.os }}"
     #     ansible_connection: winrm
     #     ansible_username: "{{ vm_win_username }}"
     #     ansible_password: "{{ vm_win_password }}"
@@ -68,10 +68,10 @@
     #   include_role:
     #     name: configuration
     #   vars:
-    #     vm_ip: "{{ inventory.vm_ip }}"
-    #     vm_name: "{{ inventory.vm_name }}"
-    #     vm_template: "{{ inventory.vm_template }}"
-    #     os: "{{ inventory.os }}"
+    #     vm_ip: "{{ item.vm_ip }}"
+    #     vm_name: "{{ item.vm_name }}"
+    #     vm_template: "{{ item.vm_template }}"
+    #     os: "{{ item.os }}"
     #     ansible_connection: smart
     #   with_items:
     #     - "{{ inventory }}"
