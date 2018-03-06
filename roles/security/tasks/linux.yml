@@ -80,7 +80,7 @@
     state: present
     regexp: "^(password.*sufficient.*pam_unix.so.*)$"
     line: '\1 remember={{LAST_UNIQUE_PASSWORDS}}'
-
+    backrefs: yes
 
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
