@@ -1,9 +1,9 @@
 ---
 
-- include: roles/configuration/vars/admin_users.yml
-- include: roles/configuration/vars/cli_users.yml
-- include: roles/configuration/vars/system_groups.yml
-- include: roles/configuration/vars/service_accounts.yml
+- include: roles/configuration/defaults/admin_users.yml
+- include: roles/configuration/defaults/cli_users.yml
+- include: roles/configuration/defaults/system_groups.yml
+- include: roles/configuration/defaults/service_accounts.yml
 
 - name: "OS_CONFIG | Add Motd"
   template:
