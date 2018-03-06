@@ -31,18 +31,18 @@
   with_items: "{{ data_partitions }}"
   ignore_errors: true
   
-- name: "OS_CONFIG | Crteating xFS"
+- name: "OS_CONFIG | Crteating ext4"
   filesystem:
     dev: "/dev/data/{{ item.vol }}"
-    fstype: xfs
+    fstype: ext4
   with_items: "{{ data_partitions }}"
     
-- name: "OS_CONFIG | Mounting FS"
+- name: "OS_CONFIG | Mounting ext4"
   mount:
     path: "{{ item.mount }}"
     src: "/dev/data/{{ item.vol }}"
     state: mounted
-    fstype: xfs
+    fstype: ext4
     passno: 2
   with_items:  "{{ data_partitions }}"
   
