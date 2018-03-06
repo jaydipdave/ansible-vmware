@@ -46,42 +46,41 @@
     passno: 2
   with_items:  "{{ data_partitions }}"
 
+- name: "OS_CONFIG | Create Groups"
+  group:
+    name: "{{ item.groupname }}"
+    state: present
+  with_items: "{{ system_groups }}"
 
-   - name: Create Groups
-     group:
-       name: "{{ item.groupname }}"
-       state: present
-     with_items: "{{ system_groups }}"
+- name: OS_CONFIG | Create Service Accounts
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+    password: "{{ item.password }}"
+  with_items: "{{ service_accounts }}"
 
-   - name: Service Accounts
-     user:
-       name: "{{ item.name }}"
-       state: present
-       groups: "{{ item.groups }}"
-       password: "{{ item.password }}"
-     with_items: "{{ service_accounts }}"
+- name: OS_CONFIG | Create Admin Accounts
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+    password: "{{ item.password }}"
+    comment: "{{ item.comment }}"
+  with_items: "{{ admin_users }}"
 
-   - name: Admin Accounts
-     user:
-       name: "{{ item.name }}"
-       state: present
-       groups: "{{ item.groups }}"
-       password: "{{ item.password }}"
-       comment: "{{ item.comment }}"
-     with_items: "{{ admin_users }}"
+- name: OS_CONFIG | Cteate User Acounts
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+    password: "{{ item.password }}"
+    comment: "{{ item.comment }}"
+  with_items: "{{ cli_users }}"
 
-   - name: User Acounts
-     user:
-       name: "{{ item.name }}"
-       state: present
-       groups: "{{ item.groups }}"
-       password: "{{ item.password }}"
-       comment: "{{ item.comment }}"
-     with_items: "{{ cli_users }}"
-
-   - name: Set Passwords to Expire
-     command: '/usr/bin/chage -d 0 "{{ item.name }}"'
-     with_items: "{{ cli_users }}"
+- name: OS_CONFIG | Set Passwords to Expire
+  command: '/usr/bin/chage -d 0 "{{ item.name }}"'
+  with_items: "{{ cli_users }}"
 
 
 
