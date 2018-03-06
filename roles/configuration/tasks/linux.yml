@@ -1,10 +1,9 @@
 ---
 
-- vars_from:
-    - admin_users.yml
-    - cli_users.yml
-    - system_groups.yml
-    - service_accounts.yml
+- include: vars/admin_users.yml
+- include: vars/cli_users.yml
+- include: vars/system_groups.yml
+- include: vars/service_accounts.yml
 
 - name: "OS_CONFIG | Add Motd"
   template:
