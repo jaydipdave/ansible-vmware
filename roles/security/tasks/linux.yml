@@ -82,6 +82,14 @@
     line: '\1 remember={{LAST_UNIQUE_PASSWORDS}}'
     backrefs: yes
 
+- name: OS_HARDENING | Password error policy
+  lineinfile:
+    dest: "/etc/pam.d/system-auth"
+    state: present
+    regexp: "^(auth.*required.*pam_tally.so)(.*)$"
+    line: '\1 onerr={{LOGIN_FAIL_ERROR}} deny={{MAX_LOGIN_ATTEMPTS}} unlock_time={{ACCOUNT_UNLOCK_TIME}}'
+    backrefs: yes
+
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
 
