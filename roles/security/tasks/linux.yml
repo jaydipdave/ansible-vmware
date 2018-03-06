@@ -1,50 +1,50 @@
 ---
-- name: "OS_HARDENING | Enable necessary repos"
-  yum:
-    name: "*"
-    enablerepo: "*jdi"
-    state: latest
-    
-- name: "OS_HARDENING | Ensure kpatch is present"
-  yum:
-    name: kpatch
-    state: present
+# - name: "OS_HARDENING | Enable necessary repos"
+#   yum:
+#     name: "*"
+#     enablerepo: "*jdi"
+#     state: latest
+
+# - name: "OS_HARDENING | Ensure kpatch is present"
+#   yum:
+#     name: kpatch
+#     state: present
   
-- name: "OS_HARDENING | Check kpatch applied"
-  command: kpatch --list
-  changed_when: false
-  ignore_errors: true
+# - name: "OS_HARDENING | Check kpatch applied"
+#   command: kpatch --list
+#   changed_when: false
+#   ignore_errors: true
   
-- name: OS_HARDENING | Ensure yum-cron package is present
-  yum:
-    name: yum-cron
-    state: present
+# - name: OS_HARDENING | Ensure yum-cron package is present
+#   yum:
+#     name: yum-cron
+#     state: present
 
-- name: OS_HARDENING | enable yum-cron hourly security updates
-  replace:
-    dest: /etc/yum/yum-cron-hourly.conf
-    regexp: "{{ item.re }}"
-    replace: "{{ item.rep }}"
-    backup: yes
-  with_items:
-    - { re: '^update_cmd = .*', rep: 'update_cmd = security' }
-    - { re: '^update_messages = .*', rep: 'update_messages = yes' }
-    - { re: '^download_updates = .*', rep: 'download_updates = yes' }
-    - { re: '^apply_updates = .*', rep: 'apply_updates = yes' }
+# - name: OS_HARDENING | enable yum-cron hourly security updates
+#   replace:
+#     dest: /etc/yum/yum-cron-hourly.conf
+#     regexp: "{{ item.re }}"
+#     replace: "{{ item.rep }}"
+#     backup: yes
+#   with_items:
+#     - { re: '^update_cmd = .*', rep: 'update_cmd = security' }
+#     - { re: '^update_messages = .*', rep: 'update_messages = yes' }
+#     - { re: '^download_updates = .*', rep: 'download_updates = yes' }
+#     - { re: '^apply_updates = .*', rep: 'apply_updates = yes' }
 
-- name: OS_HARDENING | Ensure yum-cron service is enabled and started
-  service:
-    name: yum-cron
-    enabled: yes
-    state: started
+# - name: OS_HARDENING | Ensure yum-cron service is enabled and started
+#   service:
+#     name: yum-cron
+#     enabled: yes
+#     state: started
 
-- name: OS_HARDENING | Install Root Kit Hunter
-  yum:
-    name: rkhunter
-    state: present
+# - name: OS_HARDENING | Install Root Kit Hunter
+#   yum:
+#     name: rkhunter
+#     state: present
 
-- name: OS_HARDENING | Initialize rootkithunter db
-  command: "rkhunter --propupd creates=/var/lib/rkhunter/db/rkhunter.dat"
+# - name: OS_HARDENING | Initialize rootkithunter db
+#   command: "rkhunter --propupd creates=/var/lib/rkhunter/db/rkhunter.dat"
 
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
