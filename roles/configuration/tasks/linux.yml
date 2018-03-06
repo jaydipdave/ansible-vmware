@@ -1,10 +1,11 @@
 ---
+
 - include_vars:
-  - admin_users.yml
-  - cli_users.yml
-  - system_groups.yml
-  - service_accounts.yml
-  
+    - admin_users.yml
+    - cli_users.yml
+    - system_groups.yml
+    - service_accounts.yml
+
 - name: "OS_CONFIG | Add Motd"
   template:
     src: motd.j2
