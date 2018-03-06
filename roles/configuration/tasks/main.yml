@@ -6,3 +6,45 @@
 - include_tasks: linux.yml
   delegate_to: "{{ vm_ip }}"
   when: os!="win"
+
+
+
+
+
+  - name: Copy McAfee installer to the remote server
+    win_copy:
+      src: files/FramePkg.exe
+      dest: c:\Temp\
+
+  - name: Install McAfee and display the results
+    win_shell: c:\temp\Framepkg.exe /install=agent /silent
+    register: mcafee_out
+  - debug: msg="McAfee output {{ mcafee_out.stdout }}"
+
+  - name: Install SCCM client and display the results
+    win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
+    register: sccm_out
+  - debug: msg="SCCM output {{ sccm_out.stdout }}"
+
+  - name: Copy SCOM installer folder the remote server
+    win_copy:
+      src: files/AMD64/
+      dest: c:\Temp\AMD64
+
+  - name: Copy SCOM installer executable to the remote server
+    win_copy:
+      src: files/Irving.cmd
+      dest: c:\Temp\
+
+  - name: Install SCOM agent
+    win_shell: c:\temp\Irving.cmd
+    register: scom_out
+  - debug: msg="SCOM output {{ scom_out.stdout }}"
+
+  - pause:
+      minutes: 2
+      prompt: "Waiting for SCCM to finsh before rebooting..."
+
+  - name: Rebooting
+    win_reboot:
+
