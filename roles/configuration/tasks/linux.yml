@@ -4,11 +4,6 @@
     src: motd.j2
     dest: /etc/motd
   
-- name: "OS_CONFIG | Add Motd"
-  template:
-    src: motd.j2
-    dest: /etc/issue.net
-  
 - name: "OS_CONFIG | Preparing The DISK "
   parted:
     device: /dev/sdb
