@@ -1,6 +1,1 @@
----
-include_vars:
-  - admin_users.yml
-  - cli_users.yml
-  - system_groups.yml
-  - service_accounts.yml
+  
