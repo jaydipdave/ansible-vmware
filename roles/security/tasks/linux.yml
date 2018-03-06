@@ -2,8 +2,13 @@
 - name: "OS_HARDENING | Enable necessary repos"
   yum:
     name: "*"
-    enablerepo: "*"
+    enablerepo: "*-jdi"
     state: latest
+
+# Sometimes above command doesn't work on RH 6
+- name: "OS_HARDENING | Enable necessary repos"
+  command: yum-config-manager --enable "*-jdi"
+
 
 # - name: "OS_HARDENING | Ensure kpatch is present"
 #   yum:
