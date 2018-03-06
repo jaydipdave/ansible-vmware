@@ -24,6 +24,7 @@
   yum:
     name: yum-cron
     state: present
+  ignore_errors: true
 
 - name: OS_HARDENING | enable yum-cron hourly security updates
   replace:
@@ -36,20 +37,24 @@
     - { re: '^update_messages = .*', rep: 'update_messages = yes' }
     - { re: '^download_updates = .*', rep: 'download_updates = yes' }
     - { re: '^apply_updates = .*', rep: 'apply_updates = yes' }
+  ignore_errors: true
 
 - name: OS_HARDENING | Ensure yum-cron service is enabled and started
   service:
     name: yum-cron
     enabled: yes
     state: started
+  ignore_errors: true
 
 - name: OS_HARDENING | Install Root Kit Hunter
   yum:
     name: rkhunter
     state: present
+  ignore_errors: true
 
 - name: OS_HARDENING | Initialize rootkithunter db
   command: "rkhunter --propupd creates=/var/lib/rkhunter/db/rkhunter.dat"
+  ignore_errors: true
 
 - name: OS_HARDENING | Password Policy
   lineinfile: 
