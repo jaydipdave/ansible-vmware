@@ -11,7 +11,7 @@ UMASK: "022" # Currently it is explicitly set to 077 in existing profile!, which
 MIN_PASS_LENGTH: "8"
 MIN_PASS_LOWER_CHAR: "1"
 MIN_PASS_DIGIT_CHAR: "1"
-MIN_PASS_SPEC_CHAR: "1"
+MIN_PASS_SPECIAL_CHAR: "1"
 
 LAST_UNIQUE_PASSWORDS: "6"
 

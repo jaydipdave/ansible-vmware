@@ -71,9 +71,17 @@
     dest: "/etc/pam.d/system-auth"
     state: present
     regexp: "^(password.*requisite.*pam_cracklib.so.*)$"
-    line: 'password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=4'
+    line: "password\trequisite\tpam_cracklib.so try_first_pass minlength={{MIN_PASS_LENGTH}} lcredit={{MIN_PASS_LOWER_CHAR}} dcredit={{MIN_PASS_DIGIT_CHAR}} ocredit={{MIN_PASS_SPECIAL_CHAR}}"
     backup: yes
-  
+
+- name: OS_HARDENING | Password re-use policy
+  lineinfile:
+    dest: "/etc/pam.d/system-auth"
+    state: present
+    regexp: "^(password.*sufficiant.*pam_unix.so.*)$"
+    line: '\1 remember={{LAST_UNIQUE_PASSWORDS}}'
+
+
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
 
