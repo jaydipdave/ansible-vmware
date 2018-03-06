@@ -46,6 +46,36 @@
 # - name: OS_HARDENING | Initialize rootkithunter db
 #   command: "rkhunter --propupd creates=/var/lib/rkhunter/db/rkhunter.dat"
 
+- name: OS_HARDENING | Password Policy
+  lineinfile: 
+    dest: /etc/login.defs
+    regexp: "{{ item.r }}" 
+    line: "{{ item.l }}"
+    backup: yes
+    backrefs: yes
+  with_items:
+    - { r: '^PASS_MAX_DAYS', l: "PASS_MAX_DAYS   {{ PASS_MAX_DAYS }}" }
+    - { r: '^PASS_MIN_DAYS', l: "PASS_MIN_DAYS    {{ PASS_MIN_DAYS }}" }
+    - { r: '^PASS_MIN_LEN', l: "PASS_MIN_LEN    {{ PASS_MIN_LEN }}" }
+    - { r: '^PASS_WARN_AGE', l: "PASS_WARN_AGE    {{ PASS_WARN_AGE }}" }
+    - { r: '^UMASK', l: "UMASK     {{ UMASK }}" }
+ 
+- name: OS_HARDENING | Account Policy
+  lineinfile: 
+    dest: /etc/default/useradd
+    regexp: '^INACTIVE' 
+    line: "INACTIVE {{INACTIVE_PERIOD}}"
+    backup: yes
+  
+- name: OS_HARDENING | Password requirements
+  lineinfile:
+    dest: "/etc/pan.d/system-auth"
+    state: present
+    regexp: "^(password.*requisite.*pam_cracklib.so.*)$"
+    line: 'password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=4'
+    backup: yes
+    backrefs: yes
+  
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
 
@@ -60,3 +90,5 @@
 
 - name: OS_HARDENING | Ensure rules are correct
   shell: "iptables-restore -tv < /etc/iptables/rules.v4"
+
+

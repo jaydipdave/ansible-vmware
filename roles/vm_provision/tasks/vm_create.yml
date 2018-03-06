@@ -4,7 +4,7 @@
     host: "{{ vm_ip }}"
     port: 5986
     delay: 1
-    timeout: 20
+    timeout: 5
   ignore_errors: true
   register: ip_exists_win
 
@@ -13,7 +13,7 @@
     host: "{{ vm_ip }}"
     port: 22
     delay: 1
-    timeout: 20
+    timeout: 5
   ignore_errors: true
   register: ip_exists_linux
 
