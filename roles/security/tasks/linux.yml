@@ -52,7 +52,6 @@
     regexp: "{{ item.r }}" 
     line: "{{ item.l }}"
     backup: yes
-    backrefs: yes
   with_items:
     - { r: '^PASS_MAX_DAYS', l: "PASS_MAX_DAYS   {{ PASS_MAX_DAYS }}" }
     - { r: '^PASS_MIN_DAYS', l: "PASS_MIN_DAYS    {{ PASS_MIN_DAYS }}" }
@@ -69,12 +68,11 @@
   
 - name: OS_HARDENING | Password requirements
   lineinfile:
-    dest: "/etc/pan.d/system-auth"
+    dest: "/etc/pam.d/system-auth"
     state: present
     regexp: "^(password.*requisite.*pam_cracklib.so.*)$"
     line: 'password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=4'
     backup: yes
-    backrefs: yes
   
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
