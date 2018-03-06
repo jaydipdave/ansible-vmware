@@ -1,10 +1,10 @@
 ---
 
 data_partitions:
-      - { vol: clisw, size: 25g, mount: /clisw }
-      - { vol: database, size: 100g, mount: /database }
-      - { vol: dbextents, size: 100g, mount: /dbextents }
-      - { vol: backup, size: 100%FREE, mount: /BACKUP }
+  - { vol: clisw, size: 25g, mount: /clisw }
+  - { vol: database, size: 100g, mount: /database }
+  - { vol: dbextents, size: 100g, mount: /dbextents }
+  - { vol: backup, size: 100%FREE, mount: /BACKUP }
 
 
 irving_inventory_lw:
