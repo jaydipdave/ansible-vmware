@@ -1,6 +1,6 @@
 ---
 
-- include_vars:
+- vars_from:
     - admin_users.yml
     - cli_users.yml
     - system_groups.yml
