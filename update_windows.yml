@@ -9,7 +9,7 @@
 
   tasks:
     - debug:
-      msg: "Pass --tags \"updates\" option to update windows"
+        msg: "Pass --tags \"updates\" option to update windows"
       
     - name: "MAIN | Updating Windows VMs"
       include_role:
