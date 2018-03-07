@@ -21,7 +21,7 @@
   ignore_errors: true
 
 - debug: 
-    msg: "McAfee output {{ mcafee_out.stdout }}"
+    var: mcafee_out
   ignore_errors: true
 
 - name: Install SCCM client and display the results
@@ -36,7 +36,7 @@
   ignore_errors: true
 
 - debug: 
-    msg: "SCCM output {{ sccm_out.stdout }}"
+    var: sccm_out
   ignore_errors: true
 
 - name: Copy SCOM installer folder the remote server
@@ -61,5 +61,5 @@
   ignore_errors: true
 
 - debug: 
-    msg: "SCOM output {{ scom_out.stdout }}"
+    var: scom_out
   ignore_errors: true
