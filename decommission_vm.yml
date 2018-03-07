@@ -8,6 +8,13 @@
     - inventory.yml
 
   tasks:
+    - name: "MAIN | List of Windows VMs to be **[[DELETED]]**. You better be sure about this:"
+      debug: var=inventory_item.vm_name
+      with_items: "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"
+      
     - name: "MAIN | UnInstalling base packages on Windows VMs"
       include_role:
         name: base_packages
