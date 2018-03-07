@@ -2,6 +2,8 @@
 - include_tasks: windows.yml
   when: os=="win"
   delegate_to: "{{vm_ip}}"
+  tags:
+    - updates
 
 - include_tasks: linux.yml
   when: os!="win"
