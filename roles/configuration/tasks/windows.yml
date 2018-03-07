@@ -25,6 +25,7 @@
       - "{{ local_admin_groups }}"
     state: absent
   when: uninstall
+  ignore_errors: true
 
 - name: "OS_CONFIG | Removing AD membership "
   win_domain_membership:
@@ -37,6 +38,7 @@
     state: workgroup
   register: domain_state
   when: uninstall
+  ignore_errors: true
 
 - name: "OS_CONFIG | Reboot if Required "
   win_reboot:

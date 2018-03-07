@@ -18,6 +18,7 @@
   win_shell: c:\temp\Framepkg.exe /remove=agent
   register: mcafee_out
   when: uninstall
+  ignore_errors: true
 
 - debug: msg="McAfee output {{ mcafee_out.stdout }}"
 
@@ -25,11 +26,13 @@
   win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
   register: sccm_out
   when: not uninstall
+  
 
 - name: UnInstall SCCM client and display the results
   win_shell: c:\ccmclient\ccmclean.exe /q /all
   register: sccm_out
   when: uninstall
+  ignore_errors: true
 
 - debug: msg="SCCM output {{ sccm_out.stdout }}"
 
@@ -52,13 +55,6 @@
   win_shell: c:\windows\System32\msiexec.exe /x c:\temp\AMD64\MOMAgent.msi /qb
   register: scom_out
   when: uninstall
+  ignore_errors: true
 
 - debug: msg="SCOM output {{ scom_out.stdout }}"
-
-- pause:
-    seconds: 30 
-    prompt: "Waiting for SCCM to finsh before rebooting..."
-
-- name: Rebooting
-  win_reboot:
-
