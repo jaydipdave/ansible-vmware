@@ -9,4 +9,5 @@
       datacenter: "{{ datacenter }}"
     guest: "{{ vm_name }}"
     state: absent
+    force: yes
 
