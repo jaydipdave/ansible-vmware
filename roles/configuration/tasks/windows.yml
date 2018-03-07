@@ -33,6 +33,7 @@
     hostname: "{{ vm_name }}"
     domain_admin_user: "{{ ad_domain_username }}"
     domain_admin_password: "{{ ad_domain_password }}"
+    workgroup_name: WORKGROUP
     state: workgroup
   register: domain_state
   when: uninstall
