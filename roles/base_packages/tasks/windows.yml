@@ -20,13 +20,14 @@
   when: uninstall
   ignore_errors: true
 
-- debug: msg="McAfee output {{ mcafee_out.stdout }}"
+- debug: 
+    msg: "McAfee output {{ mcafee_out.stdout }}"
+  ignore_errors: true
 
 - name: Install SCCM client and display the results
   win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
   register: sccm_out
   when: not uninstall
-  
 
 - name: UnInstall SCCM client and display the results
   win_shell: c:\ccmclient\ccmclean.exe /q /all
@@ -34,7 +35,9 @@
   when: uninstall
   ignore_errors: true
 
-- debug: msg="SCCM output {{ sccm_out.stdout }}"
+- debug: 
+    msg: "SCCM output {{ sccm_out.stdout }}"
+  ignore_errors: true
 
 - name: Copy SCOM installer folder the remote server
   win_copy:
@@ -57,4 +60,6 @@
   when: uninstall
   ignore_errors: true
 
-- debug: msg="SCOM output {{ scom_out.stdout }}"
+- debug: 
+    msg: "SCOM output {{ scom_out.stdout }}"
+  ignore_errors: true
