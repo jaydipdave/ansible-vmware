@@ -23,6 +23,8 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
+      async: 3600
+      poll: 60
 
     - name: "MAIN | Configuring Windows VMs"
       include_role:

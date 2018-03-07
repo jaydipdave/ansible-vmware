@@ -39,7 +39,3 @@
   register: domain_state
   when: uninstall
   ignore_errors: true
-
-- name: "OS_CONFIG | Reboot if Required "
-  win_reboot:
-  when: domain_state.reboot_required and uninstall
