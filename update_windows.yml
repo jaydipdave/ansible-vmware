@@ -30,5 +30,4 @@
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os == "win"
-      tags:
-        - updates
+    
