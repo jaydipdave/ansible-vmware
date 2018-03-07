@@ -5,6 +5,7 @@
   connection: local
   vars_files:
     - config/common.yml
+    - config/secrets.yml
     - inventory.yml
 
   tasks:
