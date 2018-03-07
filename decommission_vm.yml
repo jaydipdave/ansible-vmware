@@ -14,6 +14,9 @@
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os == "win"
+
+    - pause:
+        seconds: 30
       
     - name: "MAIN | UnInstalling base packages on Windows VMs"
       include_role:
