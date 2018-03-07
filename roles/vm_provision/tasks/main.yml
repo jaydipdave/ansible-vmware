@@ -1,2 +1,6 @@
 ---
 - include_tasks: "vm_create.yml"
+  when: not uninstall
+
+- include_tasks: "vm_delete.yml"
+  when: uninstall

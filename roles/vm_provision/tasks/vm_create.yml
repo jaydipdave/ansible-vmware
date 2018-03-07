@@ -67,7 +67,7 @@
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticecaption -Value "{{ legal_notice_title }}"
         - Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\ -Name legalnoticetext -Value "{{ legal_notice_text }}"
   register: newvm
-  when: (ip_exists_linux.msg is defined) and (ip_exists_win.msg is defined) 
+  when: (ip_exists_linux.msg is defined) and (ip_exists_win.msg is defined)
 
 - name: "PROVISION | Wait for start up tasks to complete"
   wait_for:
@@ -79,6 +79,6 @@
 
 - name: "PROVISION | Sleep for 120 seconds while disk formats and run once scripts execute"
   wait_for: timeout=120
-  when: newvm.changed
+  when: newvm.changed 
 
 

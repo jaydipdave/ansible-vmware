@@ -5,7 +5,7 @@
     enablerepo: "*-jdi"
     state: latest
 
-# Sometimes above command doesn't work on RH 6
+# all the time above command doesn't work on RH 6
 - name: "OS_HARDENING | Enable necessary repos"
   command: yum-config-manager --enable "*-jdi"
 

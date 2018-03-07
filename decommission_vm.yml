@@ -1,0 +1,69 @@
+---
+- name: "Decomissioning VMs [[ :: WINDOWS ONLY :: ]]"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - config/common.yml
+    - inventory.yml
+
+  tasks:
+    - name: "MAIN | UnInstalling base packages on Windows VMs"
+      include_role:
+        name: base_packages
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
+        uninstall: true
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"
+
+    - name: "MAIN | DeConfiguring Windows VMs"
+      include_role:
+        name: configuration
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
+        uninstall: true
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"
+
+    - name: "MAIN | Removing Machines"
+      include_role:
+        name: vm_provision
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
+        uninstall: true
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"
+

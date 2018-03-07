@@ -1,0 +1,32 @@
+---
+- name: "Update Windows VMs [[ :: WINDOWS ONLY :: ]]"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - config/common.yml
+    - inventory.yml
+
+  tasks:
+    - debug:
+      msg: "Pass --tags \"updates\" option to update windows"
+      
+    - name: "MAIN | Updating Windows VMs"
+      include_role:
+        name: security
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os == "win"

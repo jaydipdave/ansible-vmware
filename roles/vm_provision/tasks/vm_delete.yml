@@ -1,0 +1,12 @@
+---
+- name: "PROVISION | Removing the virtual machine"
+  vsphere_guest:      
+    validate_certs: false
+    vcenter_hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    esxi:
+      datacenter: "{{ datacenter }}"
+    guest: "{{ vm_name }}"
+    state: absent
+

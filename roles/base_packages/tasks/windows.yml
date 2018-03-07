@@ -1,0 +1,64 @@
+---
+# - name: BASE_PACKAGES | Install git
+#   win_chocolatey:
+#     name: git
+#     state: present
+
+- name: Copy McAfee installer to the remote server
+  win_copy:
+      src: files/FramePkg.exe
+      dest: c:\Temp\
+
+- name: Install McAfee and display the results
+  win_shell: c:\temp\Framepkg.exe /install=agent /silent
+  register: mcafee_out
+  when: not uninstall
+
+- name: UnInstall McAfee and display the results
+  win_shell: c:\temp\Framepkg.exe /remove=agent
+  register: mcafee_out
+  when: uninstall
+
+- debug: msg="McAfee output {{ mcafee_out.stdout }}"
+
+- name: Install SCCM client and display the results
+  win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
+  register: sccm_out
+  when: not uninstall
+
+- name: UnInstall SCCM client and display the results
+  win_shell: c:\ccmclient\ccmclean.exe /q /all
+  register: sccm_out
+  when: uninstall
+
+- debug: msg="SCCM output {{ sccm_out.stdout }}"
+
+- name: Copy SCOM installer folder the remote server
+  win_copy:
+    src: files/AMD64/
+    dest: c:\Temp\AMD64
+
+- name: Copy SCOM installer executable to the remote server
+  win_copy:
+    src: files/Irving.cmd
+    dest: c:\Temp\
+
+- name: Install SCOM agent
+  win_shell: c:\temp\Irving.cmd
+  register: scom_out
+  when: not uninstall
+
+- name: UnInstall SCOM agent
+  win_shell: c:\windows\System32\msiexec.exe /x c:\temp\AMD64\MOMAgent.msi /qb
+  register: scom_out
+  when: uninstall
+
+- debug: msg="SCOM output {{ scom_out.stdout }}"
+
+- pause:
+    minutes: 2
+    prompt: "Waiting for SCCM to finsh before rebooting..."
+
+- name: Rebooting
+  win_reboot:
+

@@ -1,5 +1,5 @@
 ---
-- name: "OS_CONFIG | Configuring AD Group "
+- name: "OS_CONFIG | Configuring AD membership "
   win_domain_membership:
     dns_domain_name: "{{ ad_domain }}"
     domain_ou_path: "{{ ad_ou }}"
@@ -8,6 +8,7 @@
     domain_admin_password: "{{ ad_domain_password }}"
     state: domain
   register: domain_state
+  when: not uninstall
 
 - name: "OS_CONFIG | Adding AD Group"
   win_group_membership:
@@ -15,3 +16,27 @@
     members:
       - "{{ local_admin_groups }}"
     state: present
+  when: not uninstall
+
+- name: "OS_CONFIG | Removing AD Group"
+  win_group_membership:
+    name: Administrators
+    members:
+      - "{{ local_admin_groups }}"
+    state: absent
+  when: uninstall
+
+- name: "OS_CONFIG | Removing AD membership "
+  win_domain_membership:
+    dns_domain_name: "{{ ad_domain }}"
+    domain_ou_path: "{{ ad_ou }}"
+    hostname: "{{ vm_name }}"
+    domain_admin_user: "{{ ad_domain_username }}"
+    domain_admin_password: "{{ ad_domain_password }}"
+    state: workgroup
+  register: domain_state
+  when: uninstall
+
+- name: "OS_CONFIG | Reboot if Required "
+  win_reboot:
+  when: domain_state.reboot_required and uninstall
