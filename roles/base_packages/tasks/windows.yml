@@ -56,7 +56,7 @@
 - debug: msg="SCOM output {{ scom_out.stdout }}"
 
 - pause:
-    minutes: 2
+    seconds: 30 
     prompt: "Waiting for SCCM to finsh before rebooting..."
 
 - name: Rebooting
