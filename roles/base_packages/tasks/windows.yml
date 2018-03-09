@@ -18,6 +18,8 @@
   win_shell: c:\temp\Framepkg.exe /remove=agent
   register: mcafee_out
   when: uninstall
+  async: 300
+  poll: 10
   ignore_errors: true
 
 - debug: 
