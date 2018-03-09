@@ -4,30 +4,34 @@
 - include_vars: roles/configuration/defaults/cli_users.yml
 - include_vars: roles/configuration/defaults/system_groups.yml
 - include_vars: roles/configuration/defaults/service_accounts.yml
-
+  
 - name: "OS_CONFIG | Add Motd"
   template:
     src: motd.j2
     dest: /etc/motd
-  
+  when: not uninstall
+
 - name: "OS_CONFIG | Preparing The DISK "
   parted:
     device: /dev/sdb
     number: 1
     flags: [lvm]
     state: present
-  
+  when: not uninstall
+
 - name: "OS_CONFIG | Creating Volume Group"
   lvg:
     vg: data
     pvs: /dev/sdb1
     pesize: 32
-  
+  when: not uninstall
+
 - name: "OS_CONFIG | Creating Volume Group"
   lvg:
     vg: data
     pvs: /dev/sdb1
     pesize: 32
+  when: not uninstall
   
 - name: "OS_CONFIG | Crteating volumes"
   lvol:
@@ -36,12 +40,14 @@
     size: "{{ item.size }}"
   with_items: "{{ data_partitions }}"
   ignore_errors: true
+  when: not uninstall
   
 - name: "OS_CONFIG | Crteating ext4"
   filesystem:
     dev: "/dev/data/{{ item.vol }}"
     fstype: ext4
   with_items: "{{ data_partitions }}"
+  when: not uninstall
     
 - name: "OS_CONFIG | Mounting ext4"
   mount:
@@ -51,12 +57,14 @@
     fstype: ext4
     passno: 2
   with_items:  "{{ data_partitions }}"
+  when: not uninstall
 
 - name: "OS_CONFIG | Create Groups"
   group:
     name: "{{ item.groupname }}"
     state: present
   with_items: "{{ system_groups }}"
+  when: not uninstall
 
 - name: OS_CONFIG | Create Service Accounts
   user:
@@ -65,6 +73,7 @@
     groups: "{{ item.groups }}"
     password: "{{ item.password }}"
   with_items: "{{ service_accounts }}"
+  when: not uninstall
 
 - name: OS_CONFIG | Create Admin Accounts
   user:
@@ -74,6 +83,7 @@
     password: "{{ item.password }}"
     comment: "{{ item.comment }}"
   with_items: "{{ admin_users }}"
+  when: not uninstall
 
 - name: OS_CONFIG | Cteate User Acounts
   user:
@@ -83,21 +93,29 @@
     password: "{{ item.password }}"
     comment: "{{ item.comment }}"
   with_items: "{{ cli_users }}"
+  when: not uninstall
 
 - name: OS_CONFIG | Set Passwords to Expire
   command: '/usr/bin/chage -d 0 "{{ item.name }}"'
   with_items: "{{ cli_users }}"
+  when: not uninstall
 
 - name: OS_CONFIG | Add all public keys to authorized_keys
   authorized_key:
-    user: "{{ item | basename | regex_replace('\-id_rsa\.pub','') }}"
+    user: "{{ item | basename | regex_replace('.id.rsa.pub','') }}"
     state: present
     key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
     - "files/ssh_keys/*.pub"
+  when: not uninstall
 
 - name: OS_CONFIG | Bootstrap Cfengine
   command: /var/cfengine/bin/cf-agent --bootstrap {{cf_engine_server_ip}}
+  when: not uninstall
+
+- name: OS_POWEROFF | Poweroff Linux System
+  command: poweroff
+  when: uninstall
 
 
 

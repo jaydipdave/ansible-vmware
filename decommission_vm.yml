@@ -1,5 +1,5 @@
 ---
-- name: "Decomissioning VMs [[ :: WINDOWS ONLY :: ]]"
+- name: "Decomissioning VMs"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -9,17 +9,16 @@
     - inventory.yml
 
   tasks:
-    - name: "MAIN | List of Windows VMs to be **[[DELETED]]**. You better be sure about this:"
+    - name: "MAIN | List of VMs to be **[[DELETED]]**. You better be sure about this:"
       debug: var=inventory_item.vm_name
       with_items: "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
-      when: inventory_item.os == "win"
 
     - pause:
         seconds: 30
       
-    - name: "MAIN | UnInstalling base packages on Windows VMs"
+    - name: "MAIN | UnInstalling base packages on VMs"
       include_role:
         name: base_packages
       vars:
@@ -40,7 +39,7 @@
         loop_var: inventory_item
       when: inventory_item.os == "win"
 
-    - name: "MAIN | DeConfiguring Windows VMs"
+    - name: "MAIN | DeConfiguring VMs"
       include_role:
         name: configuration
       vars:
@@ -59,7 +58,6 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
-      when: inventory_item.os == "win"
 
     - name: "MAIN | Removing Machines"
       include_role:
@@ -76,5 +74,4 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
-      when: inventory_item.os == "win"
 

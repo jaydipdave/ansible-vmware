@@ -5,4 +5,4 @@
 
 - include_tasks: linux.yml
   delegate_to: "{{ vm_ip }}"
-  when: os!="win" and not uninstall
+  when: os!="win"
