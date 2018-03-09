@@ -88,6 +88,17 @@
   command: '/usr/bin/chage -d 0 "{{ item.name }}"'
   with_items: "{{ cli_users }}"
 
+- name: OS_CONFIG | Add all public keys to authorized_keys
+  authorized_key:
+    user: "{{ item | basename | regex_replace('\.pub','') }}"
+    state: present
+    key: "{{ lookup('file', {{ item }}) }}"
+  with_fileglob:
+    - "files/ssh_keys/*.pub"
+
+- name: OS_CONFIG | Bootstrap Cfengine
+  command: /var/cfengine/bin/cf-agent --bootstrap {{cf_engine_server_ip}}
+
 
 
 
