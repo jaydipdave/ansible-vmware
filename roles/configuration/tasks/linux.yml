@@ -64,8 +64,6 @@
     name: "{{ item.groupname }}"
     state: present
   with_items: "{{ system_groups }}"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Create Service Accounts
@@ -75,8 +73,6 @@
     groups: "{{ item.groups }}"
     password: "{{ item.password }}"
   with_items: "{{ service_accounts }}"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Create Admin Accounts
@@ -87,8 +83,6 @@
     password: "{{ item.password }}"
     comment: "{{ item.comment }}"
   with_items: "{{ admin_users }}"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Cteate User Acounts
@@ -99,15 +93,11 @@
     password: "{{ item.password }}"
     comment: "{{ item.comment }}"
   with_items: "{{ cli_users }}"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Set Passwords to Expire
   command: '/usr/bin/chage -d 0 "{{ item.name }}"'
   with_items: "{{ cli_users }}"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Add all public keys to authorized_keys
@@ -117,8 +107,6 @@
     key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
     - "files/ssh_keys/*.pub"
-  async: 1000
-  poll: 0
   when: not uninstall
 
 - name: OS_CONFIG | Bootstrap Cfengine
