@@ -115,6 +115,7 @@
 
 - name: OS_POWEROFF | Poweroff Linux System
   command: poweroff
+  ignore_errors: true
   when: uninstall
 
 
