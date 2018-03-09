@@ -90,9 +90,9 @@
 
 - name: OS_CONFIG | Add all public keys to authorized_keys
   authorized_key:
-    user: "{{ item | basename | regex_replace('\.pub','') }}"
+    user: "{{ item | basename | regex_replace('\-id_rsa\.pub','') }}"
     state: present
-    key: "{{ lookup('file', {{ item }}) }}"
+    key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
     - "files/ssh_keys/*.pub"
 
