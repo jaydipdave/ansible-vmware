@@ -38,6 +38,7 @@
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os == "win"
+      ignore_errors: true
 
     - name: "MAIN | DeConfiguring VMs"
       include_role:
@@ -59,6 +60,7 @@
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os == "win"
+      ignore_errors: true
 
     - name: "MAIN | DeConfiguring VMs"
       include_role:
@@ -77,6 +79,7 @@
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os != "win"
+      ignore_errors: true
 
     - name: "MAIN | Removing Machines"
       include_role:
@@ -93,4 +96,5 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
+      ignore_errors: true
 

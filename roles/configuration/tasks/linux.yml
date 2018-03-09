@@ -118,6 +118,9 @@
   ignore_errors: true
   when: uninstall
 
+- pause:
+  seconds: 30
+  when: uninstall
 
 
 
