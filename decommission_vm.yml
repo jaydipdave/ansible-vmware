@@ -58,6 +58,25 @@
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
+      when: inventory_item.os == "win"
+
+    - name: "MAIN | DeConfiguring VMs"
+      include_role:
+        name: configuration
+      vars:
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        os: "{{ inventory_item.os }}"
+        ansible_connection: smart
+        data_disk: "{{ inventory_item.data_disk }}"
+        data_partitions: "{{ inventory_item.data_partitions }}"
+        uninstall: true
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+      when: inventory_item.os != "win"
 
     - name: "MAIN | Removing Machines"
       include_role:
