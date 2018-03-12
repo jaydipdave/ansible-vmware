@@ -56,6 +56,14 @@
   register: scom_out
   when: not uninstall
 
+- name: Debugger
+  win_shell: "(Get-ChildItem -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' -Recurse -ErrorAction SilentlyContinue | foreach { if((Get-ItemProperty -Path $_.PSPath) -match "Microsoft Monitoring") {Get-ItemProperty -Path $_.PSPath |Select-Object DisplayName, UninstallString, PSPath | where {$_.DisplayName -like '*Monitoring Agent*'}} }).PSpath"
+  register: some_out
+
+- debug:
+    var: some_out
+
+
 - name: UnInstall SCOM agent
   win_shell: c:\windows\System32\msiexec.exe /x c:\temp\AMD64\MOMAgent.msi /qb
   register: scom_out
@@ -65,3 +73,4 @@
 - debug: 
     var: scom_out
   ignore_errors: true
+
