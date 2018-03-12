@@ -16,8 +16,6 @@
     timeout: 5
   ignore_errors: true
   register: ip_exists_linux
-- debug:
-    var: vm_time_zone
 
 - name: "PROVISION | Create VM from template"
   vmware_guest:      
@@ -57,7 +55,7 @@
       domainadmin: "{{ ad_domain_username }}"
       domainadminpassword: "{{ ad_domain_password }}"
       joindomain: "{{ ad_domain }}"
-      timezone: "{{ vm_time_zone | int }}"
+      timezone: "{{ default_vm_time_zone }}"
       dns_servers:
         - "{{ vm_dns_server1 }}"
         - "{{ vm_dns_server2 }}"
