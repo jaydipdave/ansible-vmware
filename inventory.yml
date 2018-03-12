@@ -5,38 +5,24 @@ irving_inventory_lw:
     vm_name: "JAYDEEP009"
     vm_template: "2012_R2_STD Fusion"
     os: "win"
-    data_disk: 100
     data_partitions: []
       
   - vm_ip: "10.106.176.45"
     vm_name: "JAYDEEP007"
     vm_template: "Fusion_RHEL6_Template"
     os: "linux"
-    data_disk: 400
-    data_partitions: 
-      - { vol: clisw, size: 25g, mount: /clisw }
-      - { vol: database, size: 100g, mount: /database }
-      - { vol: dbextents, size: 100g, mount: /dbextents }
-      - { vol: backup, size: 100%FREE, mount: /BACKUP }
 
 irving_inventory_l:
   - vm_ip: "10.106.176.45"
     vm_name: "JAYDEEP007"
     vm_template: "Fusion_RHEL6_Template"
     os: "linux"
-    data_disk: 400
-    data_partitions:
-      - { vol: clisw, size: 25g, mount: /clisw }
-      - { vol: database, size: 100g, mount: /database }
-      - { vol: dbextents, size: 100g, mount: /dbextents }
-      - { vol: backup, size: 100%FREE, mount: /BACKUP }
 
 irving_inventory_w:
   - vm_ip: "10.106.176.46"
     vm_name: "JAYDEEP009"
     vm_template: "2012_R2_STD Fusion"
     os: "win"
-    data_disk: 100
     data_partitions: []
 
 inventory: "{{ irving_inventory_lw }}" 

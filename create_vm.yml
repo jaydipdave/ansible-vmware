@@ -13,12 +13,38 @@
       include_role:
         name: vm_provision
       vars:
+        # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_netmask: "{{ inventory_item.vm_netmask | default(vm_netmask) }}"
+        vm_gateway: "{{ inventory_item.vm_gateway | default(vm_gateway) }}"
+        vm_network_port_group: "{{ inventory_item.vm_network_port_group | default(vm_network_port_group) }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(vm_dns_server2) }}"
+        
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(local_admin_groups) }}"
+        vm_time_zone: "{{ inventory_item.vm_time_zone | default(vm_time_zone) }}"
+
+        cpu: "{{ inventory_item.cpu | default(cpu) }}"
+        mem_mb: "{{ inventory_item.mem_mb | default(mem_mb) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(data_disk) }}"
+
+        primary_datastore: "{{ inventory_item.primary_datastore | default(primary_datastore) }}"
+        data_datastore: "{{ inventory_item.data_datastore | default(data_datastore) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(data_partitions)  }}"
+        # End Parameters #
+
         os: "{{ inventory_item.os }}"
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
+        
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -31,8 +57,6 @@
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
@@ -51,8 +75,6 @@
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
         data_disk: "{{ inventory_item.data_disk }}"
@@ -68,8 +90,6 @@
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
@@ -88,8 +108,6 @@
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
         data_disk: "{{ inventory_item.data_disk }}"
@@ -105,8 +123,6 @@
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
@@ -125,8 +141,6 @@
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_name: "{{ inventory_item.vm_name }}"
-        vm_template: "{{ inventory_item.vm_template }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
         data_disk: "{{ inventory_item.data_disk }}"
