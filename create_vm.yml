@@ -9,6 +9,7 @@
     - inventory.yml
 
   tasks:
+## VM CREATION ##########
     - name: "MAIN | Creating Machines"
       include_role:
         name: vm_provision
@@ -54,18 +55,27 @@
       async: 3600
       poll: 60
 
+
+## OS CONFIGURATION ##########
     - name: "MAIN | Configuring Windows VMs"
       include_role:
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -77,6 +87,15 @@
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
         data_disk: "{{ inventory_item.data_disk }}"
@@ -87,18 +106,26 @@
         loop_var: inventory_item
       when: inventory_item.os != "win"
     
+## SECURITY STUFF ########
     - name: "MAIN | Securing Windows VMs"
       include_role:
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -110,28 +137,42 @@
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
         loop_var: inventory_item
       when: inventory_item.os != "win"
 
+## BASE PACKAGE INSTALLATION ####
     - name: "MAIN | Installing base packages on Windows VMs"
       include_role:
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
@@ -143,10 +184,17 @@
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:

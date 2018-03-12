@@ -22,16 +22,26 @@
       include_role:
         name: base_packages
       vars:
+        # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        # End Parameters #
+        
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
         uninstall: true
       with_items:
         - "{{ inventory }}"
@@ -44,16 +54,25 @@
       include_role:
         name: configuration
       vars:
+        # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        # End Parameters #
         os: "{{ inventory_item.os }}"
         ansible_connection: winrm
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
         uninstall: true
       with_items:
         - "{{ inventory }}"
@@ -66,13 +85,22 @@
       include_role:
         name: configuration
       vars:
+        # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        # End Parameters #
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
         uninstall: true
       with_items:
         - "{{ inventory }}"
@@ -85,12 +113,21 @@
       include_role:
         name: vm_provision
       vars:
+        # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        # End Parameters #
         os: "{{ inventory_item.os }}"
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
         uninstall: true
       with_items:
         - "{{ inventory }}"
