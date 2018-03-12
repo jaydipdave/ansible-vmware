@@ -15,32 +15,32 @@
       vars:
         # Common Parameters #
         vm_ip: "{{ inventory_item.vm_ip }}"
-        vm_netmask: "{{ inventory_item.vm_netmask | default(vm_netmask) }}"
-        vm_gateway: "{{ inventory_item.vm_gateway | default(vm_gateway) }}"
-        vm_network_port_group: "{{ inventory_item.vm_network_port_group | default(vm_network_port_group) }}"
-        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(vm_dns_domain) }}"
-        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(vm_dns_server1) }}"
-        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(vm_dns_server2) }}"
+        vm_netmask: "{{ inventory_item.vm_netmask | default(default_vm_netmask) }}"
+        vm_gateway: "{{ inventory_item.vm_gateway | default(default_vm_gateway) }}"
+        vm_network_port_group: "{{ inventory_item.vm_network_port_group | default(default_vm_network_port_group) }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
         
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
         
-        datacenter: "{{ inventory_item.datacenter | datacenter }}"
-        cluster: "{{ inventory_item.cluster | default(cluster) }}"
-        resource_pool: "{{ inventory_item.resource_pool | default(resource_pool) }}"
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
 
-        ad_ou: "{{ inventory_item.ad_ou | default(ad_ou) }}"
-        local_admin_groups: "{{ inventory_item.local_admin_groups | default(local_admin_groups) }}"
-        vm_time_zone: "{{ inventory_item.vm_time_zone | default(vm_time_zone) }}"
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        vm_time_zone: "{{ inventory_item.vm_time_zone | default(default_vm_time_zone) }}"
 
-        cpu: "{{ inventory_item.cpu | default(cpu) }}"
-        mem_mb: "{{ inventory_item.mem_mb | default(mem_mb) }}"
-        primary_disk: "{{ inventory_item.primary_disk | default(primary_disk) }}"
-        data_disk: "{{ inventory_item.data_disk | default(data_disk) }}"
+        cpu: "{{ inventory_item.cpu | default(default_cpu) }}"
+        mem_mb: "{{ inventory_item.mem_mb | default(default_mem_mb) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
 
-        primary_datastore: "{{ inventory_item.primary_datastore | default(primary_datastore) }}"
-        data_datastore: "{{ inventory_item.data_datastore | default(data_datastore) }}"
-        data_partitions: "{{ inventory_item.data_partitions | default(data_partitions)  }}"
+        primary_datastore: "{{ inventory_item.primary_datastore | default(default_primary_datastore) }}"
+        data_datastore: "{{ inventory_item.data_datastore | default(default_data_datastore) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
         # End Parameters #
 
         os: "{{ inventory_item.os }}"
