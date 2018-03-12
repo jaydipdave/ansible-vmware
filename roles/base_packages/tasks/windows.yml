@@ -4,60 +4,61 @@
 #     name: git
 #     state: present
 
-- name: Copy McAfee installer to the remote server
-  win_copy:
-      src: files/FramePkg.exe
-      dest: c:\Temp\
+# - name: Copy McAfee installer to the remote server
+#   win_copy:
+#       src: files/FramePkg.exe
+#       dest: c:\Temp\
 
-- name: Install McAfee and display the results
-  win_shell: c:\temp\Framepkg.exe /install=agent /silent
-  register: mcafee_out
-  when: not uninstall
+# - name: Install McAfee and display the results
+#   win_shell: c:\temp\Framepkg.exe /install=agent /silent
+#   register: mcafee_out
+#   when: not uninstall
 
-- name: UnInstall McAfee and display the results
-  win_shell: c:\temp\Framepkg.exe /remove=agent
-  register: mcafee_out
-  when: uninstall
-  async: 300
-  poll: 10
-  ignore_errors: true
+# - name: UnInstall McAfee and display the results
+#   win_shell: c:\temp\Framepkg.exe /remove=agent
+#   register: mcafee_out
+#   when: uninstall
+#   async: 300
+#   poll: 10
+#   ignore_errors: true
 
-- debug: 
-    var: mcafee_out
-  ignore_errors: true
+# - debug: 
+#     var: mcafee_out
+#   ignore_errors: true
 
-- name: Install SCCM client and display the results
-  win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
-  register: sccm_out
-  when: not uninstall
+# - name: Install SCCM client and display the results
+#   win_shell: c:\ccmclient\ccmsetup.exe /NOCRLCheck
+#   register: sccm_out
+#   when: not uninstall
 
-- name: UnInstall SCCM client and display the results
-  win_shell: c:\ccmclient\ccmclean.exe /q /all
-  register: sccm_out
-  when: uninstall
-  ignore_errors: true
+# - name: UnInstall SCCM client and display the results
+#   win_shell: c:\ccmclient\ccmclean.exe /q /all
+#   register: sccm_out
+#   when: uninstall
+#   ignore_errors: true
 
-- debug: 
-    var: sccm_out
-  ignore_errors: true
+# - debug: 
+#     var: sccm_out
+#   ignore_errors: true
 
-- name: Copy SCOM installer folder the remote server
-  win_copy:
-    src: files/AMD64/
-    dest: c:\Temp\AMD64
+# - name: Copy SCOM installer folder the remote server
+#   win_copy:
+#     src: files/AMD64/
+#     dest: c:\Temp\AMD64
 
-- name: Copy SCOM installer executable to the remote server
-  win_copy:
-    src: files/Irving.cmd
-    dest: c:\Temp\
+# - name: Copy SCOM installer executable to the remote server
+#   win_copy:
+#     src: files/Irving.cmd
+#     dest: c:\Temp\
 
-- name: Install SCOM agent
-  win_shell: c:\temp\Irving.cmd
-  register: scom_out
-  when: not uninstall
+# - name: Install SCOM agent
+#   win_shell: c:\temp\Irving.cmd
+#   register: scom_out
+#   when: not uninstall
 
 - name: Debugger
-  win_shell: "(Get-ChildItem -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' -Recurse -ErrorAction SilentlyContinue | foreach { if((Get-ItemProperty -Path $_.PSPath) -match "Microsoft Monitoring") {Get-ItemProperty -Path $_.PSPath |Select-Object DisplayName, UninstallString, PSPath | where {$_.DisplayName -like '*Monitoring Agent*'}} }).PSpath"
+  win_shell: | 
+    (Get-ChildItem -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' -Recurse -ErrorAction SilentlyContinue | foreach { if((Get-ItemProperty -Path $_.PSPath) -match "Microsoft Monitoring") {Get-ItemProperty -Path $_.PSPath |Select-Object DisplayName, UninstallString, PSPath | where {$_.DisplayName -like '*Monitoring Agent*'}} }).UninstallString
   register: some_out
 
 - debug:
