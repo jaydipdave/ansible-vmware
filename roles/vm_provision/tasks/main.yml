@@ -1,7 +1,9 @@
 ---
 - name: Dump all vars
-    action: template src=templates/dumpall.j2 dest=/tmp/ansible.all
-    
+  template: 
+    src: templates/dumpall.j2 
+    dest: /tmp/ansible.all
+
 - include_tasks: "vm_create.yml"
   when: not uninstall
 
