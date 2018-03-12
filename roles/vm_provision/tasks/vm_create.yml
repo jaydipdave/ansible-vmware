@@ -16,6 +16,8 @@
     timeout: 5
   ignore_errors: true
   register: ip_exists_linux
+- debug:
+    var: vm_time_zone
 
 - name: "PROVISION | Create VM from template"
   vmware_guest:      
