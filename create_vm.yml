@@ -31,7 +31,7 @@
 
         ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
         local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
-        vm_time_zone: "{{ inventory_item.vm_time_zone | default(default_vm_time_zone) }}"
+        vm_time_zone: "{{ inventory_item.vm_time_zone | default(default_vm_time_zone) | int }}"
 
         cpu: "{{ inventory_item.cpu | default(default_cpu) }}"
         mem_mb: "{{ inventory_item.mem_mb | default(default_mem_mb) }}"
