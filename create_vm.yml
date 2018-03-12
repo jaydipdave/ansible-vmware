@@ -62,6 +62,7 @@
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
@@ -87,6 +88,7 @@
         name: configuration
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
@@ -110,6 +112,7 @@
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
@@ -135,6 +138,7 @@
         name: security
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
@@ -157,6 +161,7 @@
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
@@ -182,6 +187,7 @@
         name: base_packages
       vars:
         vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_name: "{{ inventory_item.vm_name }}"
         vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
         vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
         vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
