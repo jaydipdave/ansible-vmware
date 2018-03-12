@@ -25,7 +25,7 @@
         vm_name: "{{ inventory_item.vm_name }}"
         vm_template: "{{ inventory_item.vm_template }}"
         
-        datacenter: "{{ inventory_item.datacenter | default(datacenter) }}"
+        datacenter: "{{ inventory_item.datacenter | datacenter }}"
         cluster: "{{ inventory_item.cluster | default(cluster) }}"
         resource_pool: "{{ inventory_item.resource_pool | default(resource_pool) }}"
 
