@@ -98,8 +98,6 @@
 
         os: "{{ inventory_item.os }}"
         ansible_connection: smart
-        data_disk: "{{ inventory_item.data_disk }}"
-        data_partitions: "{{ inventory_item.data_partitions }}"
       with_items:
         - "{{ inventory }}"
       loop_control:
