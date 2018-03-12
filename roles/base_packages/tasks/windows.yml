@@ -64,6 +64,14 @@
 - debug:
     var: some_out
 
+- name: Debugger
+  win_shell: | 
+    "{{ some_out.stdout }}"
+  register: some_out1
+
+- debug:
+    var: some_out1
+
 
 - name: UnInstall SCOM agent
   win_shell: c:\windows\System32\msiexec.exe /x c:\temp\AMD64\MOMAgent.msi /qb
