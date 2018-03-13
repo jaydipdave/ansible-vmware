@@ -82,7 +82,7 @@
     state: present
     regexp: "^(password.*requisite.*pam_cracklib.so.*)$"
     line: "password\trequisite\tpam_cracklib.so try_first_pass minlength={{MIN_PASS_LENGTH}} lcredit={{MIN_PASS_LOWER_CHAR}} dcredit={{MIN_PASS_DIGIT_CHAR}} ocredit={{MIN_PASS_SPECIAL_CHAR}}"
-    backup: yes
+    backup: no
 
 - name: OS_HARDENING | Password re-use policy
   lineinfile:
@@ -90,7 +90,7 @@
     state: present
     regexp: "^(password.*sufficient.*pam_unix.so.*authtok)$"
     line: '\1 remember={{LAST_UNIQUE_PASSWORDS}}'
-    backrefs: yes
+    backrefs: no
 
 - name: OS_HARDENING | Password error policy
   lineinfile:
@@ -98,6 +98,7 @@
     state: present
     regexp: "^(auth.*required.*pam_tally.so)(.*)$"
     line: "auth\trequired\tpam_tally.so onerr={{LOGIN_FAIL_ERROR}} deny={{MAX_LOGIN_ATTEMPTS}} unlock_time={{ACCOUNT_UNLOCK_TIME}}"
+    backup: no
 
 - name: OS_HARDENING | Ensure iptables directory exists
   file: dest=/etc/iptables state=directory mode=0755
