@@ -11,6 +11,7 @@
   tasks:
 ## VM CREATION ##########
     - name: "MAIN | Creating Machines"
+      tags: vm_provision
       include_role:
         name: vm_provision
       vars:
@@ -58,6 +59,7 @@
 
 ## OS CONFIGURATION ##########
     - name: "MAIN | Configuring Windows VMs"
+      tags: configuration
       include_role:
         name: configuration
       vars:
@@ -84,6 +86,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Configuring Linux VMs"
+      tags: configuration
       include_role:
         name: configuration
       vars:
@@ -108,6 +111,7 @@
     
 ## SECURITY STUFF ########
     - name: "MAIN | Securing Windows VMs"
+      tags: security
       include_role:
         name: security
       vars:
@@ -134,6 +138,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Securing Linux VMs"
+      tags: security
       include_role:
         name: security
       vars:
@@ -157,6 +162,7 @@
 
 ## BASE PACKAGE INSTALLATION ####
     - name: "MAIN | Installing base packages on Windows VMs"
+      tags: base_packages
       include_role:
         name: base_packages
       vars:
@@ -183,6 +189,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Installing base packages on Linux VMs"
+      tags: base_packages
       include_role:
         name: base_packages
       vars:
