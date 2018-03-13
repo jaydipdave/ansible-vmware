@@ -59,7 +59,7 @@
 
 ## OS CONFIGURATION ##########
     - name: "MAIN | Configuring Windows VMs"
-      tags: configuration
+      tags: configuration,win
       include_role:
         name: configuration
       vars:
@@ -86,7 +86,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Configuring Linux VMs"
-      tags: configuration
+      tags: configuration,linux
       include_role:
         name: configuration
       vars:
@@ -111,7 +111,7 @@
     
 ## SECURITY STUFF ########
     - name: "MAIN | Securing Windows VMs"
-      tags: security
+      tags: security,win
       include_role:
         name: security
       vars:
@@ -138,7 +138,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Securing Linux VMs"
-      tags: security
+      tags: security,linux
       include_role:
         name: security
       vars:
@@ -162,7 +162,7 @@
 
 ## BASE PACKAGE INSTALLATION ####
     - name: "MAIN | Installing base packages on Windows VMs"
-      tags: base_packages
+      tags: base_packages,win
       include_role:
         name: base_packages
       vars:
@@ -189,7 +189,7 @@
       when: inventory_item.os == "win"
 
     - name: "MAIN | Installing base packages on Linux VMs"
-      tags: base_packages
+      tags: base_packages,linux
       include_role:
         name: base_packages
       vars:

@@ -20,7 +20,7 @@
 - name: Failing if the machine already exists
   fail: 
     msg: Machine is running, not a good idea to continue.
-  when: (ip_exists_linux.msg is defined) and (ip_exists_win.msg is defined)
+  when: (ip_exists_linux.msg is not defined) or (ip_exists_win.msg is not defined)
 
 - name: "PROVISION | Create VM from template"
   vmware_guest:      
