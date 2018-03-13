@@ -66,7 +66,7 @@
 
 # - name: Debugger
 #   win_shell: | 
-#     {{ some_out.stdout | regex_replace('\I','\X') }}
+#     {{ some_out.stdout | regex_replace('\I','\X') }} /qb
 #   register: some_out1
 
 # - debug:
@@ -83,3 +83,13 @@
     var: scom_out
   ignore_errors: true
 
+
+- name: Install SQL_Drivers
+  win_shell: powershell.exe -ExecutionPolicy Unrestricted -File c:\temp\sqldrivers.ps1
+  register: sql_out
+  when: packages | search('sql_client') and not uninstall
+
+- debug: 
+    var: sql_out
+  ignore_errors: true
+  
