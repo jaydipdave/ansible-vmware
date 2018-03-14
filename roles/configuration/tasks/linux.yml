@@ -122,6 +122,7 @@
   seconds: 30
   when: uninstall
 
-
+#- include_tasks: linux_ad.yml
+#  when: not uninstall
 
   

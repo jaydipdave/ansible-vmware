@@ -1,0 +1,9 @@
+[global]
+   workgroup = {{ ad_domain }}
+   client signing = yes
+   client use spnego = yes
+   kerberos method = secrets and keytab
+   log file = /var/log/samba/%m.log
+   password server = {{ ad_domain }}
+   realm = {{ ad_domain }}
+   security = ads
