@@ -60,6 +60,7 @@ irving_apache_servers:
 inventory: "{{ irving_database_servers }} + {{ irving_database_servers }}" 
 ```
 > Tip: You can also assign the inventory variable from the command line
+
 `ansible-playbook create_vm.yml --extra-vars "inventory={{irving_jboss_servers}}"`
 
 ### VM Configurations
