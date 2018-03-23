@@ -1,5 +1,5 @@
 ---
-- name: "Creating VMs"
+- name: "Setting up Inventory"
   hosts: localhost
   gather_facts: false
   vars_files:
@@ -10,7 +10,6 @@
 
   tasks:
     - name: "MAIN | Setting up Inventory"
-      delegate_to: "localhost"
       add_host:
         hostname: "{{ inventory_item.vm_ip }}"
         vm_ip: "{{ inventory_item.vm_ip }}"
@@ -48,8 +47,9 @@
       loop_control:
         loop_var: inventory_item
 
-- name: "Starting VMs"
+- name: "Creating VMs"
   hosts: all
+  serial: 10
   gather_facts: false
   vars_files:
     - config/common.yml
@@ -63,10 +63,7 @@
       tags: vm_provision
       include_role:
         name: vm_provision
-      when: inventory_hostname != "localhost"
       
-
-## OS CONFIGURATION ##########
     - name: "MAIN | Configuring Windows VMs"
       tags: configuration,win
       include_role:
@@ -76,4 +73,5 @@
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-      when: inventory_hostname != "localhost" and os == "win"
+      when: os == "win"
+

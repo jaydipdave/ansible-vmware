@@ -1,11 +1,14 @@
 ---
 - name: Dump all vars
+  delegate_to: "localhost"
   template: 
     src: templates/dumpall.j2 
     dest: /tmp/ansible.all
 
 - include_tasks: "vm_create.yml"
+  delegate_to: "localhost"
   when: not uninstall
 
 - include_tasks: "vm_delete.yml"
+  delegate_to: "localhost"
   when: uninstall
