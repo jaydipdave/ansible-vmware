@@ -1,6 +1,6 @@
 ---
 - name: "Creating VMs"
-  # hosts: localhost
+  hosts: localhost
   gather_facts: false
   vars_files:
     - config/common.yml
@@ -9,7 +9,6 @@
     #- inventory_secrets.yml
 
   tasks:
-## VM CREATION ##########
     - name: "MAIN | Setting up Inventory"
       delegate_to: "localhost"
       add_host:
@@ -39,7 +38,6 @@
         primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
         data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
 
-        primary_datastore: "{{ inventory_item.primary_datastore | default(default_primary_datastore) }}"
         data_datastore: "{{ inventory_item.data_datastore | default(default_data_datastore) }}"
         data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
         # End Parameters #
@@ -50,10 +48,22 @@
       loop_control:
         loop_var: inventory_item
 
+- name: "Starting VMs"
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - config/common.yml
+    - config/secrets.yml
+    - inventory.yml
+  tasks:
+    - debug:
+        var: inventory_hostname
+
     - name: "MAIN | Creating Machines"
       tags: vm_provision
       include_role:
         name: vm_provision
+      when: inventory_hostname != "localhost"
       
 
 ## OS CONFIGURATION ##########
@@ -66,4 +76,4 @@
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-      when: os == "win"
+      when: inventory_hostname != "localhost" and os == "win"
