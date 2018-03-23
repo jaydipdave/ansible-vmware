@@ -1,6 +1,7 @@
 ---
 - name: "Setting up Inventory"
   hosts: localhost
+  connection: local
   gather_facts: false
   vars_files:
     - config/common.yml
@@ -63,6 +64,7 @@
       tags: vm_provision
       include_role:
         name: vm_provision
+      when: inventory_hostname != "localhost"
       
     - name: "MAIN | Configuring Windows VMs"
       tags: configuration,win
@@ -73,5 +75,5 @@
         ansible_user: "{{ vm_win_username }}"
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
-      when: os == "win"
+      when: inventory_hostname != "localhost" and os == "win"
 
