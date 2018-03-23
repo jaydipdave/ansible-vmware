@@ -1,8 +1,8 @@
 ---
-- name: BASE_PACKAGES | Install git
-  win_chocolatey:
-    name: git
-    state: present
+# - name: BASE_PACKAGES | Install git
+#   win_chocolatey:
+#     name: git
+#     state: present
 
 - name: Copy McAfee installer to the remote server
   win_copy:
@@ -92,4 +92,3 @@
 - debug: 
     var: sql_out
   ignore_errors: true
-  

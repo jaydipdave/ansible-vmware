@@ -1,0 +1,20 @@
+---
+- name: "Creating VMs"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    - new_inventory: []
+  vars_files:
+    #- config/common.yml
+    #- config/secrets.yml
+    - inventory.yml
+    - inventory_secret.yml
+
+  tasks:
+    - name: "Test"
+      debug: 
+        msg: "Username: {{ passwords[item.vm_name].username }}\n Password: {{ passwords[item.vm_name].password }}"
+      with_items:
+        - "{{ inventory }}"
+        

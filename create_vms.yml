@@ -1,0 +1,69 @@
+---
+- name: "Creating VMs"
+  # hosts: localhost
+  gather_facts: false
+  vars_files:
+    - config/common.yml
+    - config/secrets.yml
+    - inventory.yml
+    #- inventory_secrets.yml
+
+  tasks:
+## VM CREATION ##########
+    - name: "MAIN | Setting up Inventory"
+      delegate_to: "localhost"
+      add_host:
+        hostname: "{{ inventory_item.vm_ip }}"
+        vm_ip: "{{ inventory_item.vm_ip }}"
+        vm_netmask: "{{ inventory_item.vm_netmask | default(default_vm_netmask) }}"
+        vm_gateway: "{{ inventory_item.vm_gateway | default(default_vm_gateway) }}"
+        vm_network_port_group: "{{ inventory_item.vm_network_port_group | default(default_vm_network_port_group) }}"
+        vm_dns_domain: "{{ inventory_item.vm_dns_domain | default(default_vm_dns_domain) }}"
+        vm_dns_server1: "{{ inventory_item.vm_dns_server1 | default(default_vm_dns_server1) }}"
+        vm_dns_server2: "{{ inventory_item.vm_dns_server2 | default(default_vm_dns_server2) }}"
+        
+        vm_name: "{{ inventory_item.vm_name }}"
+        vm_template: "{{ inventory_item.vm_template }}"
+        
+        datacenter: "{{ inventory_item.datacenter | default(default_datacenter) }}"
+        cluster: "{{ inventory_item.cluster | default(default_cluster) }}"
+        resource_pool: "{{ inventory_item.resource_pool | default(default_resource_pool) }}"
+
+        ad_ou: "{{ inventory_item.ad_ou | default(default_ad_ou) }}"
+        local_admin_groups: "{{ inventory_item.local_admin_groups | default(default_local_admin_groups) }}"
+        # Removed this because of a bug in jinja2 template. String can't be converted to Int.
+        # vm_time_zone: "{{ inventory_item.vm_time_zone | default(default_vm_time_zone) | int }}" 
+        
+        cpu: "{{ inventory_item.cpu | default(default_cpu) }}"
+        mem_mb: "{{ inventory_item.mem_mb | default(default_mem_mb) }}"
+        primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
+        data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
+
+        primary_datastore: "{{ inventory_item.primary_datastore | default(default_primary_datastore) }}"
+        data_datastore: "{{ inventory_item.data_datastore | default(default_data_datastore) }}"
+        data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
+        # End Parameters #
+
+        os: "{{ inventory_item.os }}"
+      with_items:
+        - "{{ inventory }}"
+      loop_control:
+        loop_var: inventory_item
+
+    - name: "MAIN | Creating Machines"
+      tags: vm_provision
+      include_role:
+        name: vm_provision
+      
+
+## OS CONFIGURATION ##########
+    - name: "MAIN | Configuring Windows VMs"
+      tags: configuration,win
+      include_role:
+        name: configuration
+      vars:
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+      when: os == "win"
