@@ -87,7 +87,7 @@
 - name: Install SQL_Drivers
   win_shell: powershell.exe -ExecutionPolicy Unrestricted -File c:\temp\sqldrivers.ps1
   register: sql_out
-  when: packages | search('sql_client') and not uninstall
+  when: "'sql_client' in packages" and not uninstall
 
 - debug: 
     var: sql_out
