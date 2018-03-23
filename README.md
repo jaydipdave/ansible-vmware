@@ -5,11 +5,14 @@ The ansible scripts can be used to create virtual machine with specific configur
 
 There are following scripts:
   - `create_vm.yml`: Creates, Configures, Secures Virtual Machines and installs base packages packages 
+  - `create_vms.yml`: Same as `create_vm.yml` but performs operations in parallel
   - `decommission_vm.yml`: Deconfigures, Uninstalls packages and Deletes Virtual machines
   - `update_windows.yml`: Updates all windows machines for security update
   - `inventory.yml`: [NOT A SCRIPT] A list of machines in form of array.
 
 ## Quick Usage
+- Creating Virtual Machines, Configure, Secure and Install base packages in PARALLEL (options same as `create_vm.yml`)
+`ansible-playbook -i localhost, create_vms.yml`
 - Creating Virtual Machines, Configure, Secure and Install base packages
 `ansible-playbook create_vm.yml`
 - Only Create Virtual Machines (Skip Configure, Secure and Installation of Base packages)
@@ -61,7 +64,7 @@ inventory: "{{ irving_database_servers }} + {{ irving_database_servers }}"
 ```
 > Tip: You can also assign the inventory variable from the command line
 
-`ansible-playbook create_vm.yml --extra-vars "inventory={{irving_jboss_servers}}"`
+`ansible-playbook -i localhost, create_vms.yml --extra-vars "inventory={{irving_jboss_servers}}"`
 
 ### VM Configurations
 As shown in the inventory.yml file, some parameters have to be specified per VM. Following parameters are mendatory to specify in the invetory file per host.
