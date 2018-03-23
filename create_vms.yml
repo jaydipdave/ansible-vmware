@@ -38,6 +38,7 @@
         primary_disk: "{{ inventory_item.primary_disk | default(default_primary_disk) }}"
         data_disk: "{{ inventory_item.data_disk | default(default_data_disk) }}"
 
+        primary_datastore: "{{ inventory_item.primary_datastore | default(default_primary_datastore) }}"
         data_datastore: "{{ inventory_item.data_datastore | default(default_data_datastore) }}"
         data_partitions: "{{ inventory_item.data_partitions | default(default_data_partitions)  }}"
         # End Parameters #
@@ -76,4 +77,49 @@
         ansible_password: "{{ vm_win_password }}"
         ansible_winrm_server_cert_validation: ignore
       when: inventory_hostname != "localhost" and os == "win"
+    
+    - name: "MAIN | Configuring Linux VMs"
+      tags: configuration,linux
+      include_role:
+        name: configuration
+      vars:
+        ansible_connection: smart
+      when: inventory_hostname != "localhost" and os == "linux"
 
+    - name: "MAIN | Securing Windows VMs"
+      tags: security,win
+      include_role:
+        name: security
+      vars:
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+      when: inventory_hostname != "localhost" and os == "win"
+    
+    - name: "MAIN | Securing Linux VMs"
+      tags: security,linux
+      include_role:
+        name: security
+      vars:
+        ansible_connection: smart
+      when: inventory_hostname != "localhost" and os == "linux"
+
+    - name: "MAIN | Installing base packages on Windows VMs"
+      tags: base_packages,win
+      include_role:
+        name: base_packages
+      vars:
+        ansible_connection: winrm
+        ansible_user: "{{ vm_win_username }}"
+        ansible_password: "{{ vm_win_password }}"
+        ansible_winrm_server_cert_validation: ignore
+      when: inventory_hostname != "localhost" and os == "win"
+    
+    - name: "MAIN | Installing base packages on Linux VMs"
+      tags: base_packages,linux
+      include_role:
+        name: base_packages
+      vars:
+        ansible_connection: smart
+      when: inventory_hostname != "localhost" and os == "linux"
