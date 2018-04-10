@@ -84,11 +84,11 @@
   ignore_errors: true
 
 
-- name: Install SQL_Drivers
-  win_shell: powershell.exe -ExecutionPolicy Unrestricted -File c:\temp\sqldrivers.ps1
-  register: sql_out
-  when: "'sql_client' in packages" and not uninstall
+# - name: Install SQL_Drivers
+#   win_shell: powershell.exe -ExecutionPolicy Unrestricted -File c:\temp\sqldrivers.ps1
+#   register: sql_out
+#   when: "'sql_client' in packages" and not uninstall
 
-- debug: 
-    var: sql_out
-  ignore_errors: true
+# - debug: 
+#     var: sql_out
+#   ignore_errors: true

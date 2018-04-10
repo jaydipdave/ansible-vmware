@@ -1,4 +1,5 @@
 ---
+# This file is outdated, use create_vms.yml instead
 - name: "Creating VMs"
   hosts: localhost
   gather_facts: false
