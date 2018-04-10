@@ -1,16 +1,16 @@
----
-- name: "BASE_PACKAGES | Install AD related packages"
-  yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - sssd
-    - authconfig
-    - sssd-ad
-    - samba-client
-    - samba-common-tools
-    - krb5-workstation
-    - oddjob-mkhomedir
+# ---
+# - name: "BASE_PACKAGES | Install AD related packages"
+#   yum:
+#     name: "{{ item }}"
+#     state: latest
+#   with_items:
+#     - sssd
+#     - authconfig
+#     - sssd-ad
+#     - samba-client
+#     - samba-common-tools
+#     - krb5-workstation
+#     - oddjob-mkhomedir
 
-- 
+# - name: ""
   
