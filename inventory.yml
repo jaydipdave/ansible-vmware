@@ -27,4 +27,4 @@ irving_inventory_w:
     os: "win"
     data_partitions: []
 
-inventory: "{{ irving_inventory_l }}" 
+inventory: "{{ irving_inventory_lw }}" 
