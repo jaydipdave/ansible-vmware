@@ -1,7 +1,13 @@
 ---
+- name: "BASE_PACKAGES | Install Bind-Utils"
+  yum:
+    name: "bind-utils"
+    enablerepo: "*jdi"
+    state: latest
+
 - name: "BASE_PACKAGES | Install VS_FTPD"
   yum:
     name: "@ftp-server"
     enablerepo: "rhel6-server-base,*jdi"
     state: latest
-    
+

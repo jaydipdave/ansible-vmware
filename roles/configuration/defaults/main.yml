@@ -1,2 +1,6 @@
 ---
 uninstall: false
+- include_vars: roles/configuration/defaults/admin_users.yml
+- include_vars: roles/configuration/defaults/cli_users.yml
+- include_vars: roles/configuration/defaults/system_groups.yml
+- include_vars: roles/configuration/defaults/service_accounts.yml

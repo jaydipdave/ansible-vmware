@@ -1,16 +1,144 @@
-# ---
-# - name: "BASE_PACKAGES | Install AD related packages"
-#   yum:
-#     name: "{{ item }}"
-#     state: latest
-#   with_items:
-#     - sssd
-#     - authconfig
-#     - sssd-ad
-#     - samba-client
-#     - samba-common-tools
-#     - krb5-workstation
-#     - oddjob-mkhomedir
+---
+- name: "OS_CONFIG | Install AD related packages"
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - sssd
+    - cifs-utils
+    - authconfig
+    - sssd-ad
+    - samba-client
+    - samba-common-tools
+    - krb5-workstation
+    - oddjob-mkhomedir
+    - ntp
+    - openldap-clients
+    - samba-common
+- set_fact:
+    netbiosname: "{{ ansible_hostname[0:15] | upper }}"
+- set_fact:
+    WORKGROUP: "{{ ad_domain | regex_replace('^(.*)\\.(.*)', '\\1') | upper }}"
+- set_fact:
+    ADDOMAIN: "{{ ad_domain | upper }}"
+- set_fact:
+    JOINACCT: "{{ ad_domain_username | regex_replace('^(.*)@(.*)', '\\1') | lower }}"
+- set_fact:
+    JOINAGAIN: "n"
+- set_fact:
+    ENUMERATE: "n"
 
-# - name: ""
-  
+
+- name: Check if already domain joined
+  shell: timeout 5s net ads testjoin
+  register: testjoin_result
+  failed_when: testjoin_result.rc == 0
+  when: JOINAGAIN == "n"
+
+# - name: Update resolv.conf
+#   template: src=files/redhat/misc_config/rh6/resolv.conf.j2 dest=/etc/resolv.conf
+
+- name: Create backup location at /root/authbackup
+  file: dest=/root/authbackup state=directory
+  register: authbackup_dir
+
+
+# We only save a backup if the backup path doesn't already exist to avoid overwriting
+# a previous backup
+- name: Save backup of auth config files to /root/authbackup
+  command: /usr/sbin/authconfig --savebackup=/root/authbackup
+  when: ansible_os_family == 'RedHat' and authbackup_dir.changed == true
+
+# - name: Ensure sssd is stopped
+#   service: name=sssd state=stopped
+
+# sss_cache -E doesn't currently work
+- name: Clear the sssd cache
+  shell: rm -f /var/lib/sss/db/* /var/lib/sss/mc/*
+
+- name: Make sure ntpd is running
+  service: name=ntpd state=started enabled=yes
+
+# Make sure conflicting services are stopped
+- name: Check to see if nslcd exists
+  stat: path=/etc/init.d/nslcd
+  register: nslcd_init
+
+- name: Stop and disable nslcd
+  service: name=nslcd state=stopped enabled=no
+  when: nslcd_init.stat.exists == true
+
+- name: Check to see if winbind exists
+  stat: path=/etc/init.d/winbind
+  register: winbind_init
+
+- name: Stop and disable winbind
+  service: name=winbind state=stopped enabled=no
+  when: winbind_init.stat.exists == true
+
+
+- name: Check to see if nscd exists
+  stat: path=/etc/init.d/nscd
+  register: nscd_init
+
+- name: Stop and disable nscd
+  service: name=nscd state=stopped enabled=no
+  when: nscd_init.stat.exists == true
+
+# Install JDI versions of pam.d files
+- name: Install JDI versions of system-auth-ac
+  template: src=files/redhat/misc_config/rh6/system-auth-ac dest=/etc/pam.d/system-auth-ac
+
+- name: Delete system-aut if it exists as a plain file
+  file: path=/etc/pam.d/system-auth state=absent
+
+- name: Create link for system-auth
+  file: src=system-auth-ac dest=/etc/pam.d/system-auth state=link
+
+- name: Install JDI versions of password-auth-sc
+  template: src=files/redhat/misc_config/rh6/password-auth-ac dest=/etc/pam.d/password-auth-ac
+
+- name: Create link for password-auth
+  file: src=password-auth-ac dest=/etc/pam.d/password-auth state=link
+
+- name: Install JDI versions of sshd pam config
+  template: src=files/redhat/misc_config/rh6/sshd dest=/etc/pam.d/sshd
+
+- name: Install JDI version of access.conf
+  template: src=files/redhat/misc_config/rh6/access.conf.j2 dest=/etc/security/access.conf
+
+# Configure Samba
+- name: Install smb.conf configuration file
+  template: src=files/redhat/misc_config/rh6/smb.conf.j2 dest=/etc/samba/smb.conf
+
+# Configure Kerberos
+- name: Install krb5.conf configuration file
+  template: src=files/redhat/misc_config/rh6/krb5.conf.j2 dest=/etc/krb5.conf
+
+- name: Get Kerberos ticket
+  shell: echo "{{ ad_domain_password }}" | kinit "{{JOINACCT}}@{{ADDOMAIN}}"
+
+- name: Join to domain
+  command: net ads join createcomputer="Member Servers/UNIX Servers" -U "{{JOINACCT}}@{{ADDOMAIN}}"%"{{ad_domain_password}}"
+
+
+# Configure SSSD
+- name: Install sssd configuration file
+  template: src=files/redhat/misc_config/rh6/sssd.conf.j2 dest=/etc/sssd/sssd.conf mode=0600
+
+
+- name: Set UID_MAX to 5000 to avoid conflicts with AD
+  lineinfile: dest=/etc/login.defs regexp=^UID_MAX line='UID_MAX                  5000'
+
+- name: Set GID_MAX to 5000 to avoid conflicts with AD
+  lineinfile: dest=/etc/login.defs regexp=^GID_MAX line='GID_MAX                  5000'
+
+- name: Enable sssd service
+  service: name=sssd state=started enabled=yes
+
+- name: Configure sssd
+  command: /usr/sbin/authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
+
+
+
+

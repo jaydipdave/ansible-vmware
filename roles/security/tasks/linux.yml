@@ -1,5 +1,5 @@
 ---
-- name: "OS_HARDENING | Enable necessary repos"
+- name: "OS_HARDENING | Yum Update Latest Patches"
   yum:
     name: "*"
     enablerepo: "rhel6-base,*-jdi"

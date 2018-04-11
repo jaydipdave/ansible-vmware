@@ -1,0 +1,200 @@
+printers: 
+  - name: mcbram2
+    driver: xrx6600n.ppd
+    ipaddr: 10.40.81.29
+
+  - name: mcbramo
+    driver: xrwc5745.ppd
+    ipaddr: 10.40.81.27
+
+  - name: mcbramw
+    driver: xrx5955.ppd
+    ipaddr: 10.40.81.26
+
+  - name: mcchtf2
+    driver: xrwc5745.ppd
+    ipaddr: 10.40.3.30
+
+  - name: mccrb
+    driver: xrx5845.ppd
+    ipaddr: 10.40.27.25
+
+  - name: mccredit
+    driver: xrwc5755.ppd
+    ipaddr: 10.100.21.40
+
+  - name: mcdieppe2
+    driver: xrx5855.ppd
+    ipaddr: 10.40.20.27
+
+  - name: mcdrum01
+    driver: xrx5955.ppd
+    ipaddr: 10.40.40.26
+
+  - name: mcdrum02
+    driver: XeroxPhaser4620.ppd
+    ipaddr: 10.40.40.27
+
+  - name: mcfrd
+    driver: XRWCP255.PPD
+    ipaddr: 10.40.13.27
+
+  - name: mchebb
+    driver: x2UNIV.ppd
+    ipaddr: 10.40.72.26
+
+  - name: mchfxf
+    driver: xrwc5645.ppd
+    ipaddr: 10.40.2.30
+  - name: mchfxsls
+    driver: x2UNIV.ppd
+    ipaddr: 10.40.2.27
+  - name: mchub1
+    driver: xrx4265.ppd
+    ipaddr: 10.40.20.31
+  - name: mcken
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.6.26
+  - name: mcken2f
+    driver: xrx5955.ppd
+    ipaddr: 10.40.6.60
+  - name: mcmir
+    driver: x2UNIV.ppd
+    ipaddr: 10.40.63.26
+  - name: mcmpdisp
+    driver: xrx5955.ppd
+    ipaddr: 10.40.5.25
+  - name: mcmtld
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.64.26
+  - name: mcmtlo
+    driver: xrwc5745.ppd
+    ipaddr: 10.40.64.27
+  - name: mcmtnadm
+    driver: xrx5955.ppd
+    ipaddr: 10.100.25.26
+  - name: mcmtpearl
+    driver: xrwc5745.ppd
+    ipaddr: 10.40.5.26
+  - name: mcott01
+    driver: xrwc5745.ppd
+    ipaddr: 10.40.60.26
+  - name: mcott02
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.60.27
+  - name: mcott03
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.60.28
+  - name: mctru
+    driver: xrx5855.ppd
+    ipaddr: 10.40.8.26
+  - name: mcyarm
+    driver: xrx4265.ppd
+    ipaddr: 10.40.51.26
+  - name: midadjust
+    driver: xrwc5755.ppd
+    ipaddr: 10.100.21.41
+  - name: midbill2
+    driver: xrx4265.ppd
+    ipaddr: 10.100.21.36
+  - name: midbilling
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.100.21.33
+  - name: midbth
+    driver: XRWCP232.PPD
+    ipaddr: 10.40.11.26
+  - name: midbth2
+    driver: xrx4510n.ppd
+    ipaddr: 10.40.11.25
+  - name: midcam01
+    driver: xrx5855.ppd
+    ipaddr: 10.40.35.26
+  - name: midcam02
+    driver: xrx5855.ppd
+    ipaddr: 10.40.35.25
+  - name: midcontroller
+    driver: xr6600dn.ppd
+    ipaddr: 10.100.21.43
+  - name: midenb
+    driver: xrx4265.ppd
+    ipaddr: 10.40.12.25
+  - name: midenb2
+    driver: x2UNIV.ppd
+    ipaddr: 10.40.12.26
+  - name: midgfs
+    driver: xrx4622.ppd
+    ipaddr: 10.40.4.26
+  - name: midgfs2
+    driver: XRWCP232.PPD
+    ipaddr: 10.40.4.25
+  - name: midgm
+    driver: xrx4622.ppd
+    ipaddr: 10.100.21.31
+  - name: midhoa1
+    driver: xrx5955.ppd
+    ipaddr: 10.100.21.38
+  - name: midhob1
+    driver: xrx5955.ppd
+    ipaddr: 10.100.23.30
+  - name: midhob2
+    driver: xrwc5655.ppd
+    ipaddr: 10.100.23.32
+  - name: midhob3
+    driver: x2dhay.ppd
+    ipaddr: 10.100.23.25
+  - name: midimage4f
+    driver: xrx5550n.ppd
+    ipaddr: 10.100.41.28
+  - name: midis
+    driver: xrx5955.ppd
+    ipaddr: 10.100.21.49
+  - name: midmonfusiontest
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.100.23.27
+  - name: midque01
+    driver: xrx5955.ppd
+    ipaddr: 10.40.15.25
+  - name: midque02
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.15.26
+  - name: midstj01
+    driver: xrwc5755.ppd
+    ipaddr: 10.40.28.31
+  - name: midsydd
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.67.26
+  - name: midsydo
+    driver: xrwc5645.ppd
+    ipaddr: 10.40.67.25
+  - name: midtru
+    driver: xrx4622.ppd
+    ipaddr: 10.40.8.25
+  - name: mtbrams
+    driver: xrx6600n.ppd
+    ipaddr: 10.40.10.35
+  - name: mtbrams2
+    driver: xrx6600n.ppd
+    ipaddr: 10.40.10.29
+  - name: mtcht
+    driver: xr4510dt.ppd
+    ipaddr: 10.40.3.26
+  - name: mtcrb
+    driver: XeroxPhaser4620.ppd
+    ipaddr: 10.40.27.26
+  - name: mtdart
+    driver: xrx5955.ppd
+    ipaddr: 10.40.18.28
+  - name: mtfrd
+    driver: xrx4622.ppd
+    ipaddr: 10.40.13.25
+  - name: mtqcsls
+    driver: xrx5955.ppd
+    ipaddr: 10.40.9.28
+
+  - name: mtsjnb
+    driver: xrx4622.ppd
+    ipaddr: 10.40.28.25
+
+  - name: mtsjnb02
+    driver: XeroxPhaser4600.ppd
+    ipaddr: 10.40.28.26

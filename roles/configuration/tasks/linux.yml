@@ -4,11 +4,33 @@
 - include_vars: roles/configuration/defaults/cli_users.yml
 - include_vars: roles/configuration/defaults/system_groups.yml
 - include_vars: roles/configuration/defaults/service_accounts.yml
+- include_vars: roles/configuration/defaults/cifs_creds.yml
+- include_vars: roles/configuration/defaults/printers.yml
   
 - name: "OS_CONFIG | Add Motd"
   template:
     src: motd.j2
     dest: /etc/motd
+  when: not uninstall
+
+- name: "OS_CONFIG | resolv.conf "
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  when: not uninstall
+
+- name: "OS_CONFIG | /etc/hosts "
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
   when: not uninstall
 
 - name: "OS_CONFIG | Preparing The DISK "
@@ -113,6 +135,29 @@
   command: /var/cfengine/bin/cf-agent --bootstrap {{cf_engine_server_ip}}
   when: not uninstall
 
+- name: OS_CONFIG | Install required cups package
+  yum:
+    name: cups
+    enablerepo: "*jdi"
+    state: latest
+
+- name:  OS_CONFIG | Enable cups service
+  service: name=cups state=started enabled=yes
+
+- name:  OS_CONFIG | Copy PPD files
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/cups/model/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  with_fileglob:
+    - "files/printers/*"
+
+- name: OS_CONFIG | Installing Printers
+  command: lpadmin -p {{ item.name }} -P /usr/share/cups/model/{{ item.driver }} -E -v lpd://{{ item.ipaddr }}
+  with_items: "{{printers}}"
+
 - name: OS_POWEROFF | Poweroff Linux System
   command: poweroff
   ignore_errors: true
@@ -122,7 +167,60 @@
   seconds: 30
   when: uninstall
 
-#- include_tasks: linux_ad.yml
-#  when: not uninstall
 
+- name: OS_CONFIG | Create CIFS credentials file
+  copy:
+    dest: /root/creds.{{ CIFSServer }}
+    content: "username={{ cifscreds[CIFSServer].username }}\npassword={{ cifscreds[CIFSServer].password }}\ndomain={{ CIFSServer }}\n"
+    owner: root
+    group: root
+    mode: 0400
+
+- name: Install required samba packages
+  yum:
+    name: samba-client, cifs-utils
+    enablerepo: "*jdi"
+    state: latest
+
+- name: OS_CONFIG | Configure mounts
+  mount:
+    path: "/clisw/code/IMAGE/emails"
+    src: "//{{ CIFSServer }}/CLI_Email"
+    state: mounted
+    fstype: cifs
+    opts: '_netdev,rw,uid=progress,gid=cliadmin,dir_mode=0775,sec=ntlmssp,credentials=/root/creds.{{ CIFSServer }}'
+    passno: 0
+
+- name: Create /etc/adsm directory
+  file:
+    dest: /etc/adsm
+    state: directory
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: Copy TSM.PWD
+  template:
+    src: TSM.PWD.j2
+    dest: /etc/adsm/TSM.PWD
+    owner: root
+    group: root
+    mode: 0600
+  when: tsm_passwords[vm_name] is defined
+
+- name: Get running dsmc process PID
+  shell: "ps -ef | grep -v grep | grep 'dsmc schedule' | awk '{print $2}'"
+  register: running_processes
+
+- name: kill running dsmc process
+  shell: "kill -6 {{ item }}"
+  with_items: "{{ running_processes.stdout_lines }}"
+  ignore_errors: yes
+  register: killed_processes
+
+- name: Force kill stuck processes
+  shell: "kill -9 {{ item }}"
+  with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
   
+- include_tasks: linux_ad.yml
+ when: not uninstall

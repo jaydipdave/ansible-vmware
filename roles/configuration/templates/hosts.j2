@@ -1,0 +1,18 @@
+127.0.0.1   localhost   localhost.localdomain   localhost4  localhost4.localdomain4
+::1   localhost   localhost.localdomain   localhost6  localhost6.localdomain6
+
+10.6.1.20   timeserver.irving.com
+172.16.4.11 timeserver-mctn.irving.com
+#
+#Fusion DevOps Environment
+#
+{% for host in servers_to_monitor %}
+{{ hostvars[host].ansible_default_ipv4.address }}   {{ hostvars[host].vm_name | lower }}    {{ hostvars[host].vm_name | lower }}.irving.com
+{% endfor %}
+
+#
+# Printers
+#
+{% for printer in printers %}
+{{ printer.ipaddr }}   {{ printer.name }}   # add printer.branch variable if branch name is important 
+{% endfor %}
