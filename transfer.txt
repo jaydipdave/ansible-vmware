@@ -1,0 +1,294 @@
+ - name: Create CIFS credentials file
+      copy:
+        dest: /root/creds.{{ CIFSServer }}
+        content: "username={{ cifscreds[CIFSServer].username }}\npassword={{ cifscreds[CIFSServer].password }}\ndomain={{ CIFSServer }}\n"
+        owner: root
+        group: root
+        mode: 0400
+
+    - name: Install required samba packages
+      yum:
+        name: samba-client, cifs-utils
+        enablerepo: "*jdi"
+        state: latest
+
+    - name: Configure mounts
+      mount:
+        path: "/clisw/code/IMAGE/emails"
+        src: "//{{ CIFSServer }}/CLI_Email"
+        state: mounted
+        fstype: cifs
+        opts: '_netdev,rw,uid=progress,gid=cliadmin,dir_mode=0775,sec=ntlmssp,credentials=/root/creds.{{ CIFSServer }}'
+        passno: 0
+
+
+
+
+TSM PF
+
+
+ - name: Create /etc/adsm directory
+      file:
+        dest: /etc/adsm
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Copy TSM.PWD
+      copy:
+        src: files/redhat/tsm_pwds/{{ VMServerName }}
+        dest: /etc/adsm/TSM.PWD
+        owner: root
+        group: root
+        mode: 0600
+
+    - name: Get running dsmc process PID
+      shell: "ps -ef | grep -v grep | grep 'dsmc schedule' | awk '{print $2}'"
+      register: running_processes
+
+    - name: kill running dsmc process
+      shell: "kill -6 {{ item }}"
+      with_items: "{{ running_processes.stdout_lines }}"
+      ignore_errors: yes
+      register: killed_processes
+
+    - name: Force kill stuck processes
+      shell: "kill -9 {{ item }}"
+      with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+
+
+
+
+Printer
+
+
+- name: Install required cups package
+      yum:
+        name: cups
+        enablerepo: "*jdi"
+        state: latest
+
+    - name: Enable cups service
+      service: name=cups state=started enabled=yes
+
+    - name: Copy PPD files
+      copy:
+        src: "{{ item }}"
+        dest: "/usr/share/cups/model/{{ item | basename }}"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      with_fileglob:
+        - "files/redhat/printers/*"
+
+
+
+
+ - name: Create printer
+      command: lpadmin -p {{ item.name }} -P /usr/share/cups/model/{{ item.driver }} -E -v lpd://{{ item.ipaddr }}
+      with_items:
+        - { name: mcbram2, driver: xrx6600n.ppd, ipaddr: 10.40.81.29 }
+        - { name: mcbramo, driver: xrwc5745.ppd, ipaddr: 10.40.81.27 }
+        - { name: mcbramw, driver: xrx5955.ppd, ipaddr: 10.40.81.26 }
+        - { name: mcchtf2, driver: xrwc5745.ppd, ipaddr: 10.40.3.30 }
+        - { name: mccrb, driver: xrx5845.ppd, ipaddr: 10.40.27.25 }
+        - { name: mccredit, driver: xrwc5755.ppd, ipaddr: 10.100.21.40 }
+        - { name: mcdieppe2, driver: xrx5855.ppd, ipaddr: 10.40.20.27 }
+        - { name: mcdrum01, driver: xrx5955.ppd, ipaddr: 10.40.40.26 }
+        - { name: mcdrum02, driver: XeroxPhaser4620.ppd, ipaddr: 10.40.40.27 }
+        - { name: mcfrd, driver: XRWCP255.PPD, ipaddr: 10.40.13.27 }
+        - { name: mchebb, driver: x2UNIV.ppd, ipaddr: 10.40.72.26 }
+        - { name: mchfxf, driver: xrwc5645.ppd, ipaddr: 10.40.2.30 }
+        - { name: mchfxsls, driver: x2UNIV.ppd, ipaddr: 10.40.2.27 }
+        - { name: mchub1, driver: xrx4265.ppd, ipaddr: 10.40.20.31 }
+        - { name: mcken, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.6.26 }
+        - { name: mcken2f, driver: xrx5955.ppd, ipaddr: 10.40.6.60 }
+        - { name: mcmir, driver: x2UNIV.ppd, ipaddr: 10.40.63.26 }
+        - { name: mcmpdisp, driver: xrx5955.ppd, ipaddr: 10.40.5.25 }
+        - { name: mcmtld, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.64.26 }
+        - { name: mcmtlo, driver: xrwc5745.ppd, ipaddr: 10.40.64.27 }
+        - { name: mcmtnadm, driver: xrx5955.ppd, ipaddr: 10.100.25.26 }
+        - { name: mcmtpearl, driver: xrwc5745.ppd, ipaddr: 10.40.5.26 }
+        - { name: mcott01, driver: xrwc5745.ppd, ipaddr: 10.40.60.26 }
+        - { name: mcott02, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.60.27 }
+        - { name: mcott03, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.60.28 }
+        - { name: mctru, driver: xrx5855.ppd, ipaddr: 10.40.8.26 }
+        - { name: mcyarm, driver: xrx4265.ppd, ipaddr: 10.40.51.26 }
+        - { name: midadjust, driver: xrwc5755.ppd, ipaddr: 10.100.21.41 }
+        - { name: midbill2, driver: xrx4265.ppd, ipaddr: 10.100.21.36 }
+        - { name: midbilling, driver: XeroxPhaser4600.ppd, ipaddr: 10.100.21.33 }
+        - { name: midbth, driver: XRWCP232.PPD, ipaddr: 10.40.11.26 }
+        - { name: midbth2, driver: xrx4510n.ppd, ipaddr: 10.40.11.25 }
+        - { name: midcam01, driver: xrx5855.ppd, ipaddr: 10.40.35.26 }
+        - { name: midcam02, driver: xrx5855.ppd, ipaddr: 10.40.35.25 }
+        - { name: midcontroller, driver: xr6600dn.ppd, ipaddr: 10.100.21.43 }
+        - { name: midenb, driver: xrx4265.ppd, ipaddr: 10.40.12.25 }
+        - { name: midenb2, driver: x2UNIV.ppd, ipaddr: 10.40.12.26 }
+        - { name: midgfs, driver: xrx4622.ppd, ipaddr: 10.40.4.26 }
+        - { name: midgfs2, driver: XRWCP232.PPD, ipaddr: 10.40.4.25 }
+        - { name: midgm, driver: xrx4622.ppd, ipaddr: 10.100.21.31 }
+        - { name: midhoa1, driver: xrx5955.ppd, ipaddr: 10.100.21.38 }
+        - { name: midhob1, driver: xrx5955.ppd, ipaddr: 10.100.23.30 }
+        - { name: midhob2, driver: xrwc5655.ppd, ipaddr: 10.100.23.32 }
+        - { name: midhob3, driver: x2dhay.ppd, ipaddr: 10.100.23.25 }
+        - { name: midimage4f, driver: xrx5550n.ppd, ipaddr: 10.100.41.28 }
+        - { name: midis, driver: xrx5955.ppd, ipaddr: 10.100.21.49 }
+	- { name: midmonfusiontest, driver: XeroxPhaser4600.ppd, ipaddr: 10.100.23.27 }
+        - { name: midque01, driver: xrx5955.ppd, ipaddr: 10.40.15.25 }
+        - { name: midque02, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.15.26 }
+        - { name: midstj01, driver: xrwc5755.ppd, ipaddr: 10.40.28.31 }
+        - { name: midsydd, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.67.26 }
+        - { name: midsydo, driver: xrwc5645.ppd, ipaddr: 10.40.67.25 }
+        - { name: midtru, driver: xrx4622.ppd, ipaddr: 10.40.8.25 }
+        - { name: mtbrams, driver: xrx6600n.ppd, ipaddr: 10.40.10.35 }
+        - { name: mtbrams2, driver: xrx6600n.ppd, ipaddr: 10.40.10.29 }
+        - { name: mtcht, driver: xr4510dt.ppd, ipaddr: 10.40.3.26 }
+        - { name: mtcrb, driver: XeroxPhaser4620.ppd, ipaddr: 10.40.27.26 }
+        - { name: mtdart, driver: xrx5955.ppd, ipaddr: 10.40.18.28 }
+        - { name: mtfrd, driver: xrx4622.ppd, ipaddr: 10.40.13.25 }
+        - { name: mtqcsls, driver: xrx5955.ppd, ipaddr: 10.40.9.28 }
+        - { name: mtsjnb, driver: xrx4622.ppd, ipaddr: 10.40.28.25 }
+        - { name: mtsjnb02, driver: XeroxPhaser4600.ppd, ipaddr: 10.40.28.26 }
+
+
+
+- set_fact:
+        netbiosname: "{{ ansible_hostname[0:15] | upper }}"
+    - set_fact:
+        WORKGROUP: "{{ Domain | regex_replace('^(.*)\\.(.*)', '\\1') | upper }}"
+
+    - set_fact:
+        ADDOMAIN: "{{ Domain | upper }}"
+
+    - set_fact:
+        JOINACCT: "{{ DomainAdmin | regex_replace('^(.*)@(.*)', '\\1') | lower }}"
+
+    - set_fact:
+        JOINAGAIN: "n"
+
+    - set_fact:
+        ENUMERATE: "n"
+
+
+ # Set a timeout in case join is in a state where this would prompt for a password
+    - name: Check if already domain joined
+      shell: timeout 5s net ads testjoin
+      register: testjoin_result
+      failed_when: testjoin_result.rc == 0
+      when: JOINAGAIN == "n"
+
+    - name: Update resolv.conf
+      template: src=files/redhat/misc_config/rh6/resolv.conf.j2 dest=/etc/resolv.conf
+
+
+    - name: Install required packages (Red Hat OS family)
+      yum:
+        name:  authconfig, krb5-workstation, ntp, openldap-clients, samba-common, sssd
+        enablerepo: "*jdi"
+        state: latest
+
+    - name: Create backup location at /root/authbackup
+      file: dest=/root/authbackup state=directory
+      register: authbackup_dir
+
+
+ # We only save a backup if the backup path doesn't already exist to avoid overwriting
+    # a previous backup
+    - name: Save backup of auth config files to /root/authbackup
+      command: /usr/sbin/authconfig --savebackup=/root/authbackup
+      when: ansible_os_family == 'RedHat' and authbackup_dir.changed == true
+
+    # - name: Ensure sssd is stopped
+    #   service: name=sssd state=stopped
+
+    # sss_cache -E doesn't currently work
+    - name: Clear the sssd cache
+      shell: rm -f /var/lib/sss/db/* /var/lib/sss/mc/*
+
+    - name: Make sure ntpd is running
+      service: name=ntpd state=started enabled=yes
+
+    # Make sure conflicting services are stopped
+    - name: Check to see if nslcd exists
+      stat: path=/etc/init.d/nslcd
+      register: nslcd_init
+
+    - name: Stop and disable nslcd
+      service: name=nslcd state=stopped enabled=no
+      when: nslcd_init.stat.exists == true
+
+    - name: Check to see if winbind exists
+      stat: path=/etc/init.d/winbind
+      register: winbind_init
+
+    - name: Stop and disable winbind
+      service: name=winbind state=stopped enabled=no
+      when: winbind_init.stat.exists == true
+
+
+- name: Check to see if nscd exists
+      stat: path=/etc/init.d/nscd
+      register: nscd_init
+
+    - name: Stop and disable nscd
+      service: name=nscd state=stopped enabled=no
+      when: nscd_init.stat.exists == true
+
+    # Install JDI versions of pam.d files
+    - name: Install JDI versions of system-auth-ac
+      template: src=files/redhat/misc_config/rh6/system-auth-ac dest=/etc/pam.d/system-auth-ac
+
+    - name: Delete system-aut if it exists as a plain file
+      file: path=/etc/pam.d/system-auth state=absent
+
+    - name: Create link for system-auth
+      file: src=system-auth-ac dest=/etc/pam.d/system-auth state=link
+
+    - name: Install JDI versions of password-auth-sc
+      template: src=files/redhat/misc_config/rh6/password-auth-ac dest=/etc/pam.d/password-auth-ac
+
+    - name: Create link for password-auth
+      file: src=password-auth-ac dest=/etc/pam.d/password-auth state=link
+
+    - name: Install JDI versions of sshd pam config
+      template: src=files/redhat/misc_config/rh6/sshd dest=/etc/pam.d/sshd
+
+    - name: Install JDI version of access.conf
+      template: src=files/redhat/misc_config/rh6/access.conf.j2 dest=/etc/security/access.conf
+
+    # Configure Samba
+    - name: Install smb.conf configuration file
+      template: src=files/redhat/misc_config/rh6/smb.conf.j2 dest=/etc/samba/smb.conf
+
+    # Configure Kerberos
+    - name: Install krb5.conf configuration file
+      template: src=files/redhat/misc_config/rh6/krb5.conf.j2 dest=/etc/krb5.conf
+
+    - name: Get Kerberos ticket
+      shell: echo "{{ DomainAdminPassword }}" | kinit "{{JOINACCT}}@{{ADDOMAIN}}"
+
+    - name: Join to domain
+      command: net ads join createcomputer="Member Servers/UNIX Servers" -U "{{JOINACCT}}@{{ADDOMAIN}}"%"{{DomainAdminPassword}}"
+
+
+    # Configure SSSD
+    - name: Install sssd configuration file
+      template: src=files/redhat/misc_config/rh6/sssd.conf.j2 dest=/etc/sssd/sssd.conf mode=0600
+
+
+  - name: Set UID_MAX to 5000 to avoid conflicts with AD
+      lineinfile: dest=/etc/login.defs regexp=^UID_MAX line='UID_MAX                  5000'
+
+    - name: Set GID_MAX to 5000 to avoid conflicts with AD
+      lineinfile: dest=/etc/login.defs regexp=^GID_MAX line='GID_MAX                  5000'
+
+    - name: Enable sssd service
+      service: name=sssd state=started enabled=yes
+
+    - name: Configure sssd
+      command: /usr/sbin/authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
+
+
+
+
